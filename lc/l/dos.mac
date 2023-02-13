@@ -1,0 +1,26 @@
+	.XLIST
+	PAGE	58,132
+;**
+;
+; This macro library defines the operating environment for the 8086 L
+; memory model, which allows 64Kbytes of data and 64Kbytes of program.
+;
+;**
+
+;**
+;
+; The following symbols define the memory model being used.  Set LPROG
+; to 1 for a large program segment (greater than 64K-bytes), and set LDATA
+; to 1 for a large data segment.  Set COM to 1 to generate .COM files
+; instead of .EXE files.  Note that if COM is not zero, then LPROG and
+; LDATA must be 0.
+;
+;**
+COM	EQU	0
+LPROG	EQU	1
+LDATA	EQU	1
+	INCLUDE	LC.MAC
+
+	.LIST
+
+

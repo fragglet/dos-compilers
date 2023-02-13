@@ -1,0 +1,64 @@
+
+-a  -- Don't perform case folding
+-B  -- Use the big compiler
+-C  -- Continue compiling after fatal error
+-c  -- Place literals in CONST section
+-cc -- Allow comment nesting
+-cd -- Allow dollar sign in identifiers
+-ck -- Do not allow new keywords
+-cl -- Process all ints as longs
+-cm -- Allow constants with multiple characters
+-cs -- Make single copy of identical strings
+-ct -- Inhibit warning for undefined tags
+-cu -- Force unsigned characters
+-cw -- Suppress return warnings for int functions
+-cx -- Generate code compatible with Microsoft C
+-cz -- Group FAR uninitialized data
+-d  -- Put line number information into OBJ file
+-d1 -- Put line number & local sym info into OBJ file
+-d2 -- Put line number, local sym & type info into OBJ file
+-e  -- Allow Japanese character set
+-e1 -- Allow Chinese character set
+-e2 -- Allow Korean character set
+-F  -- Produce a file with function prototypes
+-f  -- Generate 8087/80287 instructions
+-g  -- Generate code for DOS operating system
+-g0 -- Generate code for DOS operating system
+-g1 -- Generate code for 1 mode operation
+-g2 -- Generate code for OS/2 only operation
+-gc -- Generate code for single extern CONST section
+-gf -- Generate code for single extern FAR section
+-gr -- Generate code for romable data segment
+-h  -- Generate object file with text as module name
+-i  -- Search path for include files
+-k  -- Generate code for 8086
+-k1 -- Generate code for 80186
+-k2 -- Generate code for 80286
+-L  -- Perform link after compiles
+-M  -- Perform compile only if source file is newer than object
+-ms -- Small prog/data memory model
+-msh - Small prog/data memory model with some huge data objects
+-mp -- Large prog memory model
+-mph - Large prog memory model with some huge data objects
+-md -- Large data memory model
+-mds - Large data memory model with no huge data objects
+-ml -- Large prog/data memory model
+-mls - Large prog/data memory model with no huge data objects
+-mh -- Huge prog/data memory model (objects far by default)
+-mhs - Huge prog/data memory model with no huge data objects
+-n  -- Use up to 31 significant symbols for identifiers
+-o  -- Write object module to this directory
+-p  -- Preprocess only
+-q  -- Write quad file to this directory
+-R  -- Insert compiled modules into this library
+-S  -- Buffer quad & OBJ files in memory
+-s  -- Specify names for segment, class, group, etc.
+-t  -- Use negative frame addressing
+-u  -- Do not define predefined symbols
+-v  -- Inhibit stack checking
+-w  -- Align non-char data objects on word boundary
+-x  -- Prepend extern to data items that are global
+-y  -- Assume ES != DS
+-yf -- Reset ES to DS before function calls
+-z  -- Set DS to local DGROUP
+-?  -- Display this list with no pauses

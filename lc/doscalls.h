@@ -1,0 +1,11 @@
+#include <os2bug.h>
+#include <os2dev.h>
+#include <os2dll.h>
+#include <os2io.h>
+#include <os2ipc.h>
+#include <os2mem.h>
+#include <os2misc.h>
+#include <os2mon.h>
+#include <os2nls.h>
+#include <os2task.h>
+#include <os2time.h>

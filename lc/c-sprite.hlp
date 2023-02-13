@@ -1,0 +1,231 @@
+
+Conventions                                                                  1
+-----------------
+range            addr [offset|L length]
+addr             [segment:]offset
+*addr|[addr]     Returns word contents of address.
+
+Standard commands
+-----------------
+A [addr]                               Enter assembly language instructions
+AT [addr] [[,]{|command|STOP]          Set breakpoint  (See macro commands)
+B [+|- digit|*]                        Display/enable/disable breakpoints
+B digit [addr] [[,]{|command|STOP]     Set breakpoint  (See macro commands)
+BT [levels|*]                          Stack backtrace  (Lattice C only)
+C range addr                           Compare blocks of memory
+CASE [ON|OFF]                         *Display/set symbol case sensitivity
+CLOSE module_name                     *Deactivate source module
+CLRBRK filespec                       *Clear breakpoint in child program
+D [qual] [addr] [,][offset|length]     Display memory
+E [qual] addr [list]                   Enter data into memory
+ECHO [message]                         Display message
+ERRORLEVEL [= value]                   Set/Display value to be returned to DOS.
+
+
+Standard commands                                                            2
+-----------------
+F [qual] range list                    Fill memory with data
+FILES                                 *Display open source modules
+G [=addr] [addr [addr...]]             Execute program with new breakpoints
+GO [=addr]                             Execute with existing breakpoints
+GR                                    *Execute until current procedure returns
+H or ?                                 Help
+I[W] port                             *Input from byte [word] port
+L [addr] [drive sector sector]         Load file or absolute sectors
+LIST [file] [range](radix = 10)        Display text file with line numbers
+M range addr                           Move block of memory
+MEM                                    Display memory usage
+N [filespec [trailer]]                 Set current file name and trailer
+NDP [SW|CW|TW|STn = value]            *Display/Modify 8087 status
+NOFF                                  *Disable display of 'Offset .SYMBOL'
+O[W] port value                       *Output value to byte [word] port
+OFF                                   *Enable display of 'Offset .SYMBOL'
+OPEN module_name                      *Activate source module 
+P [= 2|4]                             *Display/Modify pointer length
+Q                                      Quit
+
+
+Standard commands                                                            3
+-----------------
+R [reg [++|--]|[op]= value]]           Set/Display register(s)
+R ON|OFF                               Enable/disable register display
+S ON|OFF                              *Enable/disable source mode
+S range list                           Search memory
+SETBRK filespec                       *Set breakpoint in child program
+T [=addr] [value]                      Single step
+TYPE [file] [range](radix = 10)        Display text file without line numbers
+U [addr] [,] [offset|length]           Unassemble memory
+UM [addr] [,] [offset|length]          Unassemble memory in mixed mode
+V [value]                              Evaluate & display in radix
+VER                                   *Display current version of C-SPRITE
+W [addr] [drive sector sector]         Write file or absolute sectors
+X [=addr] [value]                      Single step past CALL, INT, LOOP, etc.
+;                                      Begin comment.  Balance of line ignored.
+
+
+
+
+
+
+
+Symbols                                                                      4
+-----------------
+.                        Display all symbols
+.symbol                  Display symbol value
+.symbol = addr           Define symbol
+.symbol = addr #n        Define symbol resident in overlay n.
+.symbol ++               Increment offset portion of symbol value
+.symbol --               Decrement offset portion of symbol value
+.symbol op= value        Modify offset portion of symbol value
+OFF(.symbol)             Returns offset portion of symbol.
+SEG(.symbol)             Returns segment portion of symbol.
+SYM                      Load symbols from current name.MAP (or name.EXE if
+                         PLINK used to create file).
+SYM filespec [value]     Load symbols from filespec.  Must be Microsoft .MAP
+                         or PLINK .EXE format.  Value used as base segment.
+USYM [filespec [value]] *Same as SYM command except ignores Lattice generated
+                         symbols.
+
+
+
+
+
+
+Symbol Definition                                                            5
+-----------------
+.symbol = addr [#n] [@type[size] [range]]   *
+
+                         addr         Address of variable  (offset only for
+                                                      stack-based variables)
+                         #overlay     Overlay number (optional)
+
+                         @type        Type is a single hex byte.
+                                      The bit breakdown is:
+
+                                      bit 0 - 3       data format
+                                      bit 4           1 = pointer
+                                      bit 5           undefined
+                                      bit 6           1 = stack-based variable
+                                      bit 7           1 = static variable
+
+
+
+
+
+                     
+
+Symbols                                                                      6
+-----------------
+                         Data formats:  0     char  (displayed in byte form)
+                                        1     char  (displayed in string form)
+                                        2     int
+                                        3     unsigned
+                                        4     long int
+                                        5     float
+                                        6     double  (floating point)
+                                        7     8087 temporary real
+                                        8     hex word
+
+
+                         size         Denotes number of elements associated
+                                      with the variable.
+
+                         range        Specifies the range of CS:IP for which
+                                      stack-based variables are valid.  It
+                                      follows the standard definition for
+                                      range.
+
+
+
+I/O Redirection                                                              7
+-----------------
+
+AUX                      Toggle to/from AUX terminal mode.  Communication
+                         parameters must be set using the MODE command.
+
+TERM [COMn] [parameters]   Toggle to/from serial terminal mode.  Same syntax
+                           as the MODE command.  (19200 BAUD allowed, 150 BAUD
+                           not allowed).  (IBM PC hardware compatible only)
+
+@|< filespec [parms]     Execute text file with parameters.  See SHOW and 
+                         NOSHOW under Macro utilities.
+
+> filespec               Redirect console output to file.  Destroys original
+                         file contents.
+>> filespec              Redirect console output to file.  Appends to end of
+                         file.
+>                        Restore normal console output.
+
+
+
+
+
+Macro utilities                                                              8
+-----------------
+
+}                             Terminate DEF, WHILE, IF, and breakpoint action
+                              definitions.  Must be the first non-blank
+                              character on the line.
+
+$ macroname [parms]           Execute macro with parameters.  
+BREAK                         Exit from current exec, WHILE, or macro.
+CONTINUE                      Jump to top of current WHILE block.
+DEF macroname {|command       Define macro.
+IF (value) {|command          Execute instruction block if value is non-zero.
+MACRO                         List macro names
+MACRO macroname|*             List macro definition(s).
+NOSHOW                        Disable display of WHILE, MACRO, EXEC.
+PAUSE [message]               Display message and wait for keystroke.
+SHOW                          Enable display of WHILE, MACRO, EXEC.
+UNDEF macroname               Delete macro.
+WHILE (value) {|command       Execute instruction block until value is zero.
+
+
+
+
+Data Type Qualifiers                                                         9
+--------------------
+For use with the D, E, and F commands.
+
+Value     meaning                       Bytes
+------------------------------------------------------------------------------
+NULL      Byte oriented
+I         Integer                       2 bytes per entry
+O         Octal
+U         Unsigned integer
+W,X       Word (Hex)
+P         Pointer (xxxx:xxxx)           4 bytes per entry
+T         Floating point
+LI        Long Integer
+LO        Long Octal
+LU        Long Unsigned integer
+LW,LX     Long Word (Hex)
+LT        Long Floating point           8 bytes per entry
+TT       *Temporary Floating point     10 bytes per entry
+S         String
+
+
+
+DOS Error Codes                                                             10
+--------------------
+
+
+First 2 digits:                         Last digit:
+
+80    Attachment failure                0     Write-protected disk
+40    SEEK failure                      1     Unknown unit
+20    Controller failure                2     Drive not ready
+10    CRC error on read                 3     Unknown command
+08    DMA overrun                       4     CRC error
+04    Sector not found                  5     Bad request structure
+03    Write-protected disk              6     Seek error
+02    Address mark not found            7     Unknown media type
+00    Other                             8     Sector not found
+                                        9     Printer out of paper
+                                        A     Write fault
+                                        B     Read fault
+                                        C     General failure
+
+
+
+
