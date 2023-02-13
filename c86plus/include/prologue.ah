@@ -1,0 +1,313 @@
+; macros and defines for C86PLUS assembly language code
+; Copyright (C) 1986 Computer Innovations, Inc, ALL RIGHTS RESERVED
+
+TRUE	equ	1
+FALSE	equ	0
+
+	ifndef	BOOT_STRAP
+BOOT_STRAP equ	FALSE
+	endif
+
+;	decode the cpu type information
+;	format is:	CPU_[0123][7]
+
+ 
+SET_CPU	macro	cpu,ndp,setcpu,setndp
+	ifdef	CPU_&cpu&ndp
+		CPU_TYPE =	cpu
+		ifidn	<ndp>,<7>
+			NDP_TYPE =	cpu
+		else
+			NDP_TYPE =	0
+		endif
+		setcpu
+		setndp
+	endif
+endm
+
+SET_CPU	0,7,.8086,.8087
+SET_CPU	1,7,.186,.8087
+SET_CPU	2,7,.286c,.287
+SET_CPU	3,7,.286c,.287
+SET_CPU	0,< >,.8086,.8087
+SET_CPU	1,< >,.186,.8087
+SET_CPU	2,< >,.286c,.287
+SET_CPU	3,< >,.286c,.287
+
+
+;	decode the memory model information
+;	format is:	MODEL_[sl][nfh][duw]
+
+SET_MODEL	macro	cod,dat,stk
+	ifdef	MODEL_&cod&dat&stk
+		ifidn	<cod>,<s>
+			FAR_CODE equ	FALSE
+		else
+			FAR_CODE equ	TRUE
+		endif
+
+		ifidn	<dat>,<n>
+			ifdif	<stk>,<d>
+				.ERR		; ILLEGAL MEMORY MODEL
+			endif
+			FAR_DATA equ	FALSE
+		else
+			FAR_DATA equ	TRUE
+		endif
+
+		ifidn	<stk>,<d>
+			SET_SSDS equ	TRUE
+		else
+			SET_SSDS equ	FALSE
+		endif
+
+		ifidn	<stk>,<u>
+			SET_DS   equ	TRUE
+		else
+			SET_DS   equ	FALSE
+		endif
+
+	endif
+endm
+
+SET_MODEL s,n,d
+SET_MODEL s,n,u
+SET_MODEL s,n,w
+SET_MODEL s,f,d
+SET_MODEL s,f,u
+SET_MODEL s,f,w
+SET_MODEL s,h,d
+SET_MODEL s,h,u
+SET_MODEL s,h,w
+SET_MODEL l,n,d
+SET_MODEL l,n,u
+SET_MODEL l,n,w
+SET_MODEL l,f,d
+SET_MODEL l,f,u
+SET_MODEL l,f,w
+SET_MODEL l,h,d
+SET_MODEL l,h,u
+SET_MODEL l,h,w
+
+;	set the defaults if needed
+
+ifndef FAR_CODE
+	FAR_CODE equ	FALSE
+endif
+ 
+ifndef 	FAR_DATA
+	FAR_DATA equ	FALSE
+endif
+
+ifndef SET_SSDS
+	SET_SSDS equ	TRUE
+endif
+ 
+ifndef SET_DS
+	SET_DS	 equ	FALSE
+endif
+
+EXTERN	macro	name,xxx
+	ifidn	<xxx>,<cp>
+		if	FAR_CODE eq TRUE
+			extrn	name:far
+		else
+			extrn	name:near
+		endif
+	else
+		ifidn	<xxx>,<dp>
+			if	FAR_DATA eq TRUE
+				extrn	name:dword
+			else
+				extrn	name:word
+			endif
+		else
+			extrn	name:xxx
+		endif
+	endif
+endm
+
+FUN_PROC macro	name
+	public	name
+	if	FAR_CODE eq TRUE
+		name	PROC	far
+		ARG_BASE =	6
+		ARG_OFF	 =	6
+		AUTO_OFF =	0
+	else
+		name	proc	near
+		ARG_BASE =	4
+		ARG_OFF	 =	4
+		AUTO_OFF =	0
+	endif
+endm
+
+FUN_BEG	macro	name,locals,regs
+	_TEXT	segment
+	assume	cs:_TEXT,ds:DGROUP
+	FUN_PROC name
+	enter	locals,0
+	irp	yy,<di,si,ds>
+		ifidn	<yy>,<ds>
+			if	SET_DS eq TRUE
+				assume	ds:nothing
+			endif
+		endif
+		irp	xx,<regs>
+			ifidn	<xx>,<yy>
+				ifidn	<xx>,<ds>
+					if	SET_DS eq TRUE
+						assume	ds:DGROUP
+						push	ds
+						mov	ax,DGROUP
+						mov	ds,ax
+					endif
+				else
+					push	xx
+				endif
+			endif
+		endm
+	endm
+endm
+
+FUN_LEAVE macro	regs
+	irp	yy,<ds,si,di>
+		irp	xx,<regs>
+			ifidn	<xx>,<yy>
+				ifidn	<xx>,<ds>
+					if	SET_DS eq TRUE
+						pop	ds
+					endif
+				else
+					pop	xx
+				endif
+			endif
+		endm
+	endm
+	leave
+	ret
+endm
+
+FUN_END	macro	name
+	name	endp
+	_TEXT	ends
+endm
+
+FUN_AUTO macro	name,siz
+	ifidn	<siz>,<cp>
+		if	FAR_CODE eq TRUE
+			AUTO_OFF = AUTO_OFF - 4
+		else
+			AUTO_OFF = AUTO_OFF - 2
+		endif
+	else
+		ifidn	<siz>,<dp>
+			if	FAR_DATA eq TRUE
+				AUTO_OFF = AUTO_OFF - 4
+			else
+				AUTO_OFF = AUTO_OFF - 2
+			endif
+		else
+			AUTO_OFF = AUTO_OFF - siz
+		endif
+	endif
+	name = AUTO_OFF
+endm
+
+FUN_ARG	macro	name,siz
+	name	=	ARG_OFF
+	ifidn	<siz>,<cp>
+		if	FAR_CODE eq TRUE
+			ARG_OFF	= ARG_OFF + 4
+		else
+			ARG_OFF	= ARG_OFF + 2
+		endif
+	else
+		ifidn	<siz>,<dp>
+			if	FAR_DATA eq TRUE
+				ARG_OFF	= ARG_OFF + 4
+			else
+				ARG_OFF	= ARG_OFF + 2
+			endif
+		else
+			ARG_OFF	= ARG_OFF + siz
+		endif
+	endif
+endm
+
+if	CPU_TYPE eq 0
+	enter	macro	a,b
+		push	bp
+		mov	bp,sp
+		ifdif	<a>,<0>
+			sub	sp,a
+		endif
+	endm
+ 
+	leave	macro
+		mov	sp,bp
+		pop	bp
+	endm
+ 
+	PUSHA	MACRO
+		PUSH	AX
+		PUSH	CX
+		PUSH	DX
+		PUSH	BX
+		PUSH	BX		;; Dummy value for SP
+		PUSH	BP
+		PUSH	SI
+		PUSH	DI
+	ENDM
+ 
+	POPA	MACRO
+		POP	DI
+		POP	SI
+		POP	BP
+		POP	BX		;; Dummy value for SP
+		POP	BX
+		POP	DX
+		POP	CX
+		POP	AX
+	ENDM
+endif
+
+ 
+;	define basic segments
+_TEXT	segment	byte public 'CODE'
+_TEXT	ends
+if	BOOT_STRAP eq TRUE
+	C_ETEXT	segment	byte public 'ENDCODE'
+		db	0	;may not be necessary
+	C_ETEXT	ends
+endif
+
+if	BOOT_STRAP eq TRUE
+	if	SET_SSDS eq FALSE
+		DGROUP	group	NULL,_DATA,_BSS,NEARHEAP,STACK
+	else
+		DGROUP	group	NULL,_DATA,_BSS,STACK
+	endif
+else
+	DGROUP	group	NULL,_DATA,_BSS
+endif
+
+NULL	segment	para public 'BEGDATA'
+	assume	ds:DGROUP
+NULL	ends
+_DATA	segment word public 'DATA'
+	assume	ds:DGROUP
+_DATA	ends
+_BSS	segment	word public 'BSS'
+	assume	ds:DGROUP
+_BSS	ends
+if	BOOT_STRAP eq TRUE
+	if	SET_SSDS eq FALSE
+		NEARHEAP	segment para public 'BSS'
+			assume	ds:DGROUP
+		NEARHEAP	ends
+	endif
+	STACK	segment	para stack 'STACK'
+	STACK	ends
+endif
+

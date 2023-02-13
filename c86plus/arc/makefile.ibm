@@ -1,0 +1,159 @@
+# makefile for the ibm libraries, cibmxxx.lib
+# REMOVE STACK CHECKING FOR PRODUCTION !!!
+
+#  9feb87 zap  First cut.
+# 23feb87 zap  Compact model.
+
+#  Choose one of the pairs of flags options below.
+#  -----------------------------------------------
+
+#FLAGS= -c -AS -Zl 
+#AFLAGS= /I\headers /DCPU_0 /DMODEL_snd /mx
+#OBJ= objsnd
+
+#FLAGS= -c -AC -Zl 
+#AFLAGS= /I\headers /DCPU_0 /DMODEL_sfd /mx
+#OBJ= objsfd
+
+#FLAGS= -c -AM -Zl 
+#AFLAGS= /I\headers /DCPU_0 /DMODEL_lnd /mx
+#OBJ= objlnd
+
+#FLAGS= -c -AL -Zl 
+#AFLAGS= /I\headers /DCPU_0 /DMODEL_lfd /mx
+#OBJ= objlfd
+
+FLAGS= -c -Alfu -Zl 
+AFLAGS= /I\headers /DCPU_0 /DMODEL_lfu /mx
+OBJ= objlfu
+
+#  -----------------------------------------------
+
+$(OBJ)\com_rst.obj: src\com_rst.c
+	cc $(FLAGS) src\com_rst.c
+	copy com_rst.obj $(OBJ)
+	del com_rst.obj
+
+$(OBJ)\crt_line.obj: src\crt_line.c
+	cc $(FLAGS) src\crt_line.c
+	copy crt_line.obj $(OBJ)
+	del crt_line.obj
+
+$(OBJ)\crt_roll.obj: src\crt_roll.c
+	cc $(FLAGS) src\crt_roll.c
+	copy crt_roll.obj $(OBJ)
+	del crt_roll.obj
+
+$(OBJ)\prt_busy.obj: src\prt_busy.c
+	cc $(FLAGS) src\prt_busy.c
+	copy prt_busy.obj $(OBJ)
+	del prt_busy.obj
+
+$(OBJ)\prt_err.obj: src\prt_err.c
+	cc $(FLAGS) src\prt_err.c
+	copy prt_err.obj $(OBJ)
+	del prt_err.obj
+
+#  ----- assembly -----
+
+$(OBJ)\com_getc.obj: src\com_getc.asm
+	masm $(AFLAGS) src\com_getc;
+	copy com_getc.obj $(OBJ)
+	del com_getc.obj
+
+$(OBJ)\com_putc.obj: src\com_putc.asm
+	masm $(AFLAGS) src\com_putc;
+	copy com_putc.obj $(OBJ)
+	del com_putc.obj
+
+$(OBJ)\com_rdy.obj: src\com_rdy.asm
+	masm $(AFLAGS) src\com_rdy;
+	copy com_rdy.obj $(OBJ)
+	del com_rdy.obj
+
+$(OBJ)\com_stat.obj: src\com_stat.asm
+	masm $(AFLAGS) src\com_stat;
+	copy com_stat.obj $(OBJ)
+	del com_stat.obj
+
+$(OBJ)\crt_cls.obj: src\crt_cls.asm \headers\prologue.ah
+	masm $(AFLAGS) /e src\crt_cls;
+	copy crt_cls.obj $(OBJ)
+	del crt_cls.obj
+
+$(OBJ)\crt_gmod.obj: src\crt_gmod.asm
+	masm $(AFLAGS) src\crt_gmod;
+	copy crt_gmod.obj $(OBJ)
+	del crt_gmod.obj
+
+$(OBJ)\crt_grcp.obj: src\crt_grcp.asm
+	masm $(AFLAGS) src\crt_grcp;
+	copy crt_grcp.obj $(OBJ)
+	del crt_grcp.obj
+
+$(OBJ)\crt_home.obj: src\crt_home.asm
+	masm $(AFLAGS) src\crt_home;
+	copy crt_home.obj $(OBJ)
+	del crt_home.obj
+
+$(OBJ)\crt_mode.obj: src\crt_mode.asm
+	masm $(AFLAGS) src\crt_mode;
+	copy crt_mode.obj $(OBJ)
+	del crt_mode.obj
+
+$(OBJ)\crt_putc.obj: src\crt_putc.asm
+	masm $(AFLAGS) src\crt_putc;
+	copy crt_putc.obj $(OBJ)
+	del crt_putc.obj
+
+$(OBJ)\crt_rdot.obj: src\crt_rdot.asm
+	masm $(AFLAGS) src\crt_rdot;
+	copy crt_rdot.obj $(OBJ)
+	del crt_rdot.obj
+
+$(OBJ)\crt_srcp.obj: src\crt_srcp.asm
+	masm $(AFLAGS) src\crt_srcp;
+	copy crt_srcp.obj $(OBJ)
+	del crt_srcp.obj
+
+$(OBJ)\crt_wdot.obj: src\crt_wdot.asm
+	masm $(AFLAGS) src\crt_wdot;
+	copy crt_wdot.obj $(OBJ)
+	del crt_wdot.obj
+
+$(OBJ)\key_getc.obj: src\key_getc.asm
+	masm $(AFLAGS) src\key_getc;
+	copy key_getc.obj $(OBJ)
+	del key_getc.obj
+
+$(OBJ)\key_scan.obj: src\key_scan.asm
+	masm $(AFLAGS) src\key_scan;
+	copy key_scan.obj $(OBJ)
+	del key_scan.obj
+
+$(OBJ)\key_shft.obj: src\key_shft.asm
+	masm $(AFLAGS) src\key_shft;
+	copy key_shft.obj $(OBJ)
+	del key_shft.obj
+
+$(OBJ)\prt_putc.obj: src\prt_putc.asm
+	masm $(AFLAGS) src\prt_putc;
+	copy prt_putc.obj $(OBJ)
+	del prt_putc.obj
+
+$(OBJ)\prt_rst.obj: src\prt_rst.asm
+	masm $(AFLAGS) src\prt_rst;
+	copy prt_rst.obj $(OBJ)
+	del prt_rst.obj
+
+$(OBJ)\prt_scr.obj: src\prt_scr.asm
+	masm $(AFLAGS) src\prt_scr;
+	copy prt_scr.obj $(OBJ)
+	del prt_scr.obj
+
+$(OBJ)\prt_stat.obj: src\prt_stat.asm
+	masm $(AFLAGS) src\prt_stat;
+	copy prt_stat.obj $(OBJ)
+	del prt_stat.obj
+
+
