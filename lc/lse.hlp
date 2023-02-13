@@ -1,0 +1,228 @@
+.00
+                        Primary Command Keys
+
+ Up Arrow     Previous Line          F1           Context Sensitive Help
+ Down Arrow   Next Line              F2           Main LSE Menu
+ Left Arrow   Previous Character     F3           Exit LSE
+ Right Arrow  Next Character         F4           Invoke Lattice Compiler 
+ Page-up      Previous Page          F5           Next Error in Error Mode
+ Page-down    Next Page              F6           Cycle through windows
+ Ctrl-F       Fork Command Processor F7           Change Foreground Color
+ Alt-S        Repeat Previous Search F8           Change Background Color
+ INS          Toggle Insert Mode     F9           Toggle Display Size
+ Del          Delete Character       Ctrl-F6      Change Window
+ Home         Beginning of Line      End          End of Line
+ Ctrl-HOME    Beginning of Text      Ctrl-END     End of Text
+ 
+ Ctrl-Y       Delete Line            Alt-Y        Restore Deleted Line
+ Ctrl-B       Block Menu             Ctrl-P       Project Menu
+ Ctrl-M       Mode Menu              Ctrl-H       Hi-Res Toggle (OS2 only)
+ Ctrl-O       Open Window            Ctrl-U       Undo Last Change
+ Ctrl-S       Search                 Ctrl-R       Search and Replace
+ Ctrl-[       Mark Start of Block    Ctrl-]       Mark End of Block
+
+                     Secondary Commands 
+
+ Ctrl-N       Insert Line            Ctrl-E       Erase to End of Line
+ Ctrl-LEFT    Previous Word          Ctrl-RIGHT   Next Word
+ Ctrl-W       Delete Word            Ctrl-F4      Set Compiler Options
+ Ctrl-V       Scroll Down            Ctrl-6       Scroll Up
+ Ctrl-\       Escape Character       Ctrl-L       Go to Line Number
+ 
+ Alt n        Starts and ends key saver for macro number n
+ Alt Fn       Replays macro number n.
+
+                    Common Command Sequences
+
+ Ctrl-P S     Save File and Close Window.
+ Ctrl-P N     Save Current File and Prompts for new file.
+ Ctrl-P O     Abandons Current Files and Prompts for new file.
+.02
+       Block Command
+
+To use any BLOCK COMMAND the block must be marked first. This is done 
+with the Ctrl-[ (begin block) and Ctrl-] (end block) commands. Then any 
+of the following are valid.
+
+Copy      -  Copies marked block to the cursor.
+Delete    -  Deletes marked block.
+Move      -  Inserts the marked block at the cursor and deletes it
+             from its previous position.
+Print     -  Sends the marked block to the PRN: device.
+Read      -  Reads a files at the cursor.
+Write     -  Writes the marked block to a file.
+Beginning -  Moves the cursor to the beginning of the block.
+End       -  Moves the cursor to the end of the block.
+.03
+
+            Block Write
+
+Write requests the name of a file.  It then writes the previously 
+marked  block  of text to that file.   No change is made  to  the 
+text.
+
+.04
+
+            Block Read
+
+Unlike  the  other  block  commands,  read  does  not  act  on  a 
+previously  marked  block.   Read  requests a filename  and  then 
+inserts the text of that file into the current text at the cursor 
+position.   If  the  file does not exist,  an  error  message  is 
+displayed.
+
+.06
+
+            Project Command
+
+The  Close  menu contains the commands used by LSE to  finish  an 
+editing session with the text of a certain window.
+
+Quit     -  Closes the current window. If Only one window is present
+            LSE is exited.
+Save     -  Saves the file in the current window and closes that window.
+            Quits if only one window was present.
+Continue -  Save the file in the current window and allows you to 
+            Continue editing that file.
+Next     -  Saves the current file and prompts for a new file. If no
+            new file is specified LSE will close that window.
+Open     -  Abandons the current file and prompts for a new file.
+Rename   -  Prompts you for a new name for the current file.
+Insert   -  Inserts a file at the cursor.
+Display  -  Displays the filenames of all files in memory.
+Macros   -  Goto Macro menu (Save and Load).
+.01
+
+
+                       LSE Command Summary
+
+  COMMAND                    ACTION
+
+Block command       cutting and pasting of a marked block
+Compile command     compiles a file from memory
+Fork  command       fork command processor for system tasks
+Line  command       go to line number
+Mode  command       LSE mode selection
+Open  command       open a second window
+Project Command     go to Project Menu
+Quit  command       exit LSE, abandon text
+Replace command     regular expression search and string replace
+String command      string or regular expression search
+Undo  command       Undo last action
+.14
+
+                 Searching
+
+Searching for strings of patterns is possible in LSE. The mode menu
+allows you to select the search you desire. After hitting the search
+key you will be prompted as to what string or pattern to search for.
+Hitting the Mode Menu key at this prompt will cause LSE to search 
+backwards. To repeat a previous search just hit the search again
+key (ESC).
+
+.15
+
+                Search and Replace
+
+Searching for strings of patterns is possible in LSE. The mode menu
+allows you to select the search you desire. After hitting the search
+and replace key you will be prompted as to what string or pattern to 
+search for, followed by a prompt for the replacement string.
+Hitting the Mode Menu key at the search prompt will cause LSE to search 
+backwards. After answering the two prompts you wil be asked if you
+want to be prompted before each replacement is made. Simply Hit P for 
+Prompt or N for No Prompt. To repeat a previous search and replace just 
+hit the search again key (ESC).
+
+.09
+
+                   Fork Command Processor
+
+The fork command processor function clears the screen and invokes 
+the  command  processor,  allowing the user to access any  needed 
+system  function.   LSE  alters your system prompt by  adding   
+<LSE>  in front of it.   This is to remind you that a copy  of 
+LSE  is  running  under the currently loaded  command  processor. 
+Entering  EXIT at the command level will return the user  to  the 
+current character in LSE.
+
+
+
+.10
+
+                 Go To Line Number 
+
+When  a  file  is  loaded into a window,  each  line  is  ordered 
+numerically.  As text is added or deleted, LSE keeps track of the 
+current  line numbers.   When the current line number command  is 
+executed, you are asked to input the line number that you want to 
+be changed to be the current line number.  If the line associated 
+with the number exists,  the cursor is moved to the beginning  of 
+that line.  If the number specified is greater than the number of 
+lines  in the file,  the cursor is moved to the last line of  the 
+file and an error message is generated.
+
+.20
+Save Macros
+
+The  save macro command lets you specify a file to which you  can 
+write out current your current set of macros. The default name is LSE.MAC
+which is automatically loaded when LSE is started up.  
+
+There  may  be  10 macros active at any one  time.   The  default 
+filename  extension for a macro is ".MAC". LSE will search your current 
+directory for a macro file so that different default macro files may be kept
+in different directories, if desired.
+
+To invoke a keyboard macro, press Alt and a function key with the number of 
+the macro (ie ALT-F1). To define a macro, press ALT and the number of the 
+macro.
+.21
+Load Macros
+
+The  load macro command asks you to specify a file that contains a set of
+macros. The file LSE.MAC from the current directory is loaded when LSE
+starts executing.
+
+There  may  be  10 macros active at any one  time.   The  default 
+filename  extension for a macro is ".MAC". LSE will search your current 
+directory for a macro file so that different default macro files may be kept
+in different directories, if desired.
+
+To invoke a keyboard macro, press Alt and a function key with the number of 
+the macro (ie ALT-F1). To define a macro, press ALT and the number of the 
+macro.
+
+.12
+
+                     Open a New Window
+
+When the open a new window command is executed,  you are prompted 
+for a filename for text to read into the new window. If you hit
+the Menu Key at this point, the file will be read as read only. The 
+screen area of the current window is split in half and the window
+is reframed to insure that the current character position  of the 
+active  window is displayed.   The new window is opened  and  the 
+cursor is placed at the first character position of the new text.
+
+If you request the open a new window command when two windows are 
+already open, an error message is displayed and editing continues 
+in the window mode.
+
+.16
+
+                        Undo Command
+
+When  the  undo command is executed,  the current undo buffer  is 
+displayed  on the status line of the current window and  you  are 
+prompted  as  to  whether you want that buffer  inserted  at  the 
+current cursor position.
+
+The  undo  buffer can hold only one line at a time and is  filled 
+when  the memory allocated to hold a line buffer is  returned  to 
+the  operating system.   It is designed to be used when a  single 
+line has been accidentally deleted.
+
+
+
+

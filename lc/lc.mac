@@ -1,0 +1,228 @@
+;**
+;
+; The following symbols define the operating system mode, as follows:
+;  
+;	DOS    ==> DOS 2 or later
+;	FAMILY ==> OS/2 family mode or 
+;		   DOS 3 or later with OS/2 stub loader
+;	OS2    ==> OS/2
+;
+; All symbols must be defined, but only one of them can be non-zero.
+;
+FAMILY	EQU	1
+DOS	EQU	0
+OS2	EQU	0
+
+;**
+;
+; This file contains the macros and symbol definitions normally used
+; when producing assembly-language modules for use with the Lattice C
+; compiler.
+;
+;**
+BS	EQU	8		; backspace character
+CR	EQU	13		; carriage return character
+ESCAPE	EQU	27		; escape character
+FF	EQU	12		; form feed character
+HT	EQU	9		; horizontal tab character
+LF	EQU	10		; line feed character
+NL	EQU	10		; newline character
+VT	EQU	11		; vertical tab character
+
+;**
+;
+; The following symbols are established via LPROG and LDATA as follows:
+;
+;	S8086	set for small model (small prog, small data)
+;	D8086	set for model with large data, small prog
+;	P8086	set for model with large prog, small data
+;	L8086	set for large model
+;
+;**
+	IF	(LPROG EQ 0) AND (LDATA EQ 0)
+S8086	EQU	1
+D8086	EQU 	0
+P8086	EQU	0
+L8086	EQU	0
+	ENDIF
+
+	IF	(LPROG EQ 0) AND (LDATA NE 0)
+S8086	EQU	0
+D8086	EQU	1
+P8086	EQU	0
+L8086	EQU	0
+	ENDIF
+
+	IF	(LPROG NE 0) AND (LDATA EQ 0)
+S8086	EQU	0
+D8086	EQU	0
+P8086	EQU	1
+L8086	EQU	0
+	ENDIF
+
+	IF	(LPROG NE 0) AND (LDATA NE 0)
+S8086	EQU	0
+D8086	EQU	0
+P8086	EQU	0
+L8086	EQU	1
+	ENDIF
+
+
+;**
+;
+; The DSEG and PSEG macros are defined to generate the appropriate GROUP
+; and SEGMENT statements for the memory model being used.  The ENDDS and
+; ENDPS macros are then used to end the segments.
+;
+;**
+DSEG	MACRO	
+DGROUP	GROUP	DATA
+DATA	SEGMENT	PUBLIC 'DATA'
+	ASSUME	DS:DGROUP
+	ENDM
+ENDDS	MACRO
+DATA	ENDS
+	ENDM
+
+PSEG	MACRO	NAME
+	IF	LPROG
+NAME&_TEXT	SEGMENT	BYTE PUBLIC 'CODE'
+	ASSUME	CS:&NAME&_TEXT
+	ELSE
+_TEXT	SEGMENT	BYTE PUBLIC 'CODE'
+	ASSUME	CS:_TEXT
+	ENDIF
+	ENDM
+
+ENDPS	MACRO	NAME
+NAME&_TEXT	ENDS
+	ENDM
+;
+; The BEGIN and ENTRY macros establish appropriate function entry points
+; depending on whether NEAR or FAR program addressing is being used.  The
+; only difference between the two is that BEGIN generates a PROC operation
+; to start a segment. 
+;
+BEGIN	MACRO	NAME			; begin a function
+	PUBLIC  NAME
+	IF	LPROG
+NAME	PROC	FAR
+	ELSE
+NAME	PROC	NEAR
+	ENDIF
+	ENDM
+
+ENTRY	MACRO	NAME
+	PUBLIC	NAME
+	IF	LPROG
+NAME	LABEL	FAR
+	ELSE
+NAME	LABEL	NEAR
+	ENDIF
+	ENDM
+
+;**
+;
+; The following symbols are defined to help set up a STRUC defining the
+; stack frame:
+;
+;	CPSIZE -> code pointer size (2 or 4)
+;	DPSIZE -> data pointer size (2 or 4)
+;
+; These wouldn't be necessary if it were possible to use macros or even
+; conditionals within a STRUC.
+;
+	IF	LPROG
+CPSIZE	EQU	4
+	ELSE
+CPSIZE	EQU	2
+	ENDIF
+	IF	LDATA
+DPSIZE	EQU	4
+	ELSE
+DPSIZE	EQU	2
+	ENDIF
+
+;
+; The SETX macro sets the symbol X to 4 if LPROG is 0 or to 6 otherwise.
+; X can then be used to skip past the BP and return address save area
+; in the stack frame when accessing the function arguments.
+; 
+SETX	MACRO
+	IF	LPROG
+X	EQU	6
+	ELSE
+X	EQU	4
+	ENDIF
+	ENDM	
+;**
+;
+; The PEXTRN macro defines an external pointer in the data segment.
+;
+PEXTRN	MACRO	NAME
+	IF 	LDATA
+	EXTRN	NAME:DWORD
+	ELSE
+	EXTRN	NAME:WORD
+	ENDIF
+	ENDM
+;**
+;
+; The FEXTRN macro defines an external function.
+;
+FEXTRN	MACRO	NAME
+	IF	LPROG
+	EXTRN	NAME:FAR
+	ELSE
+	EXTRN	NAME:NEAR
+	ENDIF
+	ENDM
+;**
+;
+; The CPUSH macro pushes a word-sized constant onto the stack.  If
+; the FAMILY switch is on, then the AX register is used, because 
+; earlier iAPX86 processors do not support the "push immediate" instruction.
+;
+CPUSH	MACRO	VALUE
+	IF	FAMILY
+	MOV	AX,VALUE
+	PUSH	AX
+	ELSE
+	PUSH	VALUE
+	ENDIF
+	ENDM
+;**
+;
+; The PUSHALL and POPALL macros are used at the beginning and end of a 
+; to push and pop all significant registers.  PUSHALL first pushes BP
+; and then sets BP to the current SP value before pushing all other
+; registers.  Therefore, the original register contents can be obtained
+; by positive addressing from SP or negative addressing from BP.
+; Function arguments are usually obtained by positive addressing from BP,
+; using the value X as a bias to get past the return address and the
+; saved copy of BP.  The SETX macro sets X based upon the current memory
+; model.
+;
+PUSHALL	MACRO
+	PUSH	BP
+	MOV	BP,SP
+	PUSH	BX
+	PUSH	CX
+	PUSH	DX
+	PUSH	SI
+	PUSH	DI
+	PUSH	DS
+	PUSH	ES
+	ENDM
+	
+POPALL	MACRO
+	POP	ES
+	POP	DS
+	POP	DI
+	POP	SI
+	POP	DX
+	POP	CX
+	POP	BX
+	POP	BP
+	ENDM
+	

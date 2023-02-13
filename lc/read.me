@@ -1,0 +1,203 @@
+                 *** LATTICE DOS and OS/2 C COMPILER ***
+                              RELEASE NOTES
+
+
+                          *** VERSION 3.30 ***
+                             August 24, 1988
+
+
+This is supplementary documentation for Version 3.3 of the Lattice C Compiler 
+for DOS and OS/2. You can use the PR command to obtain a printed copy of it.
+Three types of information are presented:
+
+	A. A list of new features to be aware of as you use the new compiler.
+	
+	B. A list of the problems that have been corrected since the
+	   previous release, which was Version 3.2.
+
+	C. A list of omissions and errata in the Version 3.3 documentation.
+
+If we need to issue any corrections to Version 3.30, we will create additional
+sections describing the problems being corrected.  Correction releases will
+be numbered 3.31, 3.32, and so on.  If you encounter a problem, you can
+find out if it has been fixed from one of these sources:
+
+	-- The BIX bulletin board.  Instructions on how to join BIX are
+	   included with your compiler package.  
+
+	-- The Lattice Bulletin Board Service.  Again, instructions on how 
+	   to join are included with your compiler package.  
+
+	-- The Lattice newsletter.  You will receive this quarterly if you
+	   register your compiler.
+
+	-- Special mailings.  If there are problems that affect
+	   a large percentage of our registered users, we issue special
+	   mailings notifying them of a correction release.
+
+	-- Lattice Technical Support.  Our support people usually know about
+	   problems that are under investigation as well as those that have
+	   been fixed.  You can contact them by phone or mail, as described
+	   in your compiler package.
+
+Naturally, we prefer that you minimize the number of phone calls to our
+technical support people, since our lines are usually very busy.  Many 
+customers have found that it is more efficient to call BIX or the Lattice 
+BBS, since they are then able to share their questions with other Lattice C
+users as well as with Lattice's support people.
+
+
+
+	     *** A. IMPORTANT FEATURES IN VERSION 3.30 ***
+	     
+All of the following items are explained in the new documentation for 
+Version 3.30. They are highlighted here because of their importance and 
+since many of you will start compiling before completely reading the 
+documentation.
+
+1. If you are using libraries or object modules compiled with version 3.2, 
+use the LIBMOD utility to make sure the linker will produce a good 
+executable. The default segment names have changed for Version 3.3 and the 
+LIBMOD utility converts the old names to the new names.
+
+2. The run-time libraries have changed with the addition of the lcr, lcg, lco,
+and lapi libraries. This will probably have some impact on the way you link 
+your programs. See the documentation for complete details.
+
+3. The OML utility has been replaced with the LLIB utility. The format of 
+the libraries produced is equivalent but some of the options have changed. 
+See the documentation for more details.
+
+4. In addition to needing the path c:\lc in your path, you should also put 
+either c:\lc\real or c:\lc\prot for DOS or OS/2 respectively. These 
+directories hold the exectables for programs that have different copies
+for the two modes. Currently, only C-Sprite and LSE are in these directories.
+
+5. The runtime options for changing the heap and stack sizes by using the 
+'=' are no longer available. The method of changing the stack size at 
+compile-time no longer uses the _STACK variable. See the source program 
+"stack.c" for an example of how to change the stack size. The default stack 
+size is now 6K bytes.
+
+6. The memory allocation routines have changed considerably and the 
+low-level variables such as _MNEED are no longer used.
+
+7. The pre-processor symbol MSDOS is no longer defined by the compiler. 
+Instead, either DOS, OS2, or FAMILY is defined depending on the compile-time 
+options.
+
+
+             *** B. PROBLEMS CORRECTED IN VERSION 3.30 *** 
+
+1. The buffered file I/O routines have had significant performance 
+improvements.
+
+2. There were several bugs in the compiler relating to enumerations in 
+different types of expressions. All of these bugs have been fixed.
+
+3. In some cases the default case of a switch was branching to the wrong 
+location. This has been corrected.
+
+4. OMD has been enhanced so that it can handle object files produced by most 
+assemblers.
+
+5. Some spurious warning 85 messages have been removed.
+
+6. When using the -f and -k2 options, the code generated was prone to timing 
+errors. WAIT instructions have been added that remove these problems.
+
+7. Several errors in the scanf() family of routines have been fixed.
+(%c, %u,...)
+
+8. Cprintf() no longer prints two carriage returns when a linefeed is 
+encountered.
+
+9. The function atol() now handles the cases of '-' and '-0'.
+
+10. The printf() family now allows you to print a null in a %c format.
+
+11. The function memcmp() now does an unsigned comparison instead of a 
+signed comparison.
+
+12. There were several errors with the putenv() and rmvenv() functions. 
+These have all been fixed.
+
+13. The function getcwd() was not putting a backslash after the drive name 
+for the root directory. It now does.
+
+
+             *** C. DOCUMENTATION ERRORS AND OMISSIONS **
+
+1. The -g1 option for LC does NOT turn on the -yf flag for the S and P models.
+
+2. C-Sprite for DOS has considerable support for debugging family-mode
+programs. What you get is the following:
+	
+a.	C-Sprite detects that the program is a family-mode program and will 
+	normally step over the 'stub-loader'. This can be overridden with 
+	the -B option. C-Sprite will only step over the Lattice stub-loader.
+	The file 'family.cs' contains the C-Sprite commands needed to step 
+	over the stub loader. One side-effect of this is that breakpoint 9
+	is changed when you re-load a family-mode program. Another 
+	side-effect is that you cannot load a family-mode program (n or l 
+	commands) from within an exec file.
+
+b.	When you load symbols for the program, C-Sprite uses
+	information that was saved at load time to correctly assign values 
+	to all the symbols. 
+	
+c.	In addition, the map file from lbind is looked for (name.bm) and
+	symbols for the binding routines will be loaded if present. No error 
+	is given if the .bm file cannot be found.
+	
+
+3.	The C-Sprite N command now does an L command to reload the new 
+program specified. If you do an N followed by an L, it will still work, the 
+program will just be loaded twice.
+	
+4.	The DOS version of LSE does not give an indication of the amount of 
+memory used.
+
+5.	The program LPATCH.EXE is a patch utility that is intended for small 
+patches.
+
+6.	On page O-12 of the library reference for ddup() and ddup2(), the 
+include file should be dos.h instead of fcntl.h.
+
+7.	On page 167 of the library reference for rename(), the include file
+should be fcntl.h instead of stdio.h.
+
+                    ****  SPECIAL SOURCE CODE OFFER ****
+	
+The graphics library is a limited version of the GFX Graphics Library 
+combined with a small subset of the GFX Font Library.  Both libraries 
+were developed and are marketed by C Source.  
+	
+The complete GFX Font Library includes the ability to use disk-based
+bitmapped fonts (using the Gem and Ventura font format).  It also has
+sophisticated screen writing functions for left or right text
+alignment, text centering, rotating characters in multiples of 90
+degrees, writing in any direction, automatic underlining, scaling
+characters in integral multiples and more. 
+	
+These libraries come complete with full source code. 
+
+The list price for the libraries is $124.50 for GFX Graphics and $74.50
+for the GFX Font library.  As a special offer for Lattice C users, 
+both libraries, source code included, can be purchased directly from C 
+Source for $125.00.
+     
+To order, call C Source at (816) 353-8808 or write:
+     		
+                             C Source, Inc.
+                             12801 Frost Rd
+                          Kansas City, MO 64138
+
+                            *****************
+
+
+
+                              *** END ***
+
+
+

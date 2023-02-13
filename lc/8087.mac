@@ -1,0 +1,130 @@
+	.XLIST
+	.8087
+;
+; CXFERR error codes
+;
+FPEUND	EQU	1			; underflow
+FPEOVF	EQU	2			; overflow
+FPEZDV	EQU	3			; divide by zero
+FPENAN	EQU	4			; not a number
+FPECOM	EQU	5			; not comparable
+;
+; UNIX error codes (placed into ERRNO)
+;
+EDOM	EQU	33			; domain error (i.e. arg is bad)
+ERANGE	EQU	34			; result is out of range
+;
+; UNIX exception codes (placed into exception vectors)
+;
+EXDOM 	EQU	1			; domain
+EXSING	EQU	2			; singularity	
+EXOVF	EQU	3			; overflow
+EXUND	EQU	4			; underflow
+EXTLOSS	EQU	5			; total loss of precision
+EXPLOSS	EQU	6			; partial loss of precision
+;
+; Useful constants
+;
+HUGE	EQU	1.797693e308		; huge value
+;
+; Test ST and jump on condition
+;
+FTJL	MACRO	LOC			; test ST and jump if < 0.0
+	FTST
+	FJL	LOC
+	ENDM
+
+FJL	MACRO	LOC			; get status and jump if <
+	FSTSW	_NDPSW
+	FWAIT
+	MOV	AH,BYTE PTR _NDPSW+1
+	SAHF
+	JB	LOC
+  	ENDM
+
+FTJE	MACRO	LOC			; test ST and jump if 0.0	
+	FTST
+	FJE	LOC
+	ENDM
+
+FJE	MACRO	LOC			; get status and jump if =
+	FSTSW	_NDPSW
+	FWAIT
+	MOV	AH,BYTE PTR _NDPSW+1
+	SAHF
+	JE	LOC
+	ENDM
+
+FTJLE	MACRO	LOC			; test ST and jump if <= 0.0
+	FTST
+	FJLE	LOC
+	ENDM
+
+FJLE	MACRO	LOC			; get status and jump if <=
+	FSTSW	_NDPSW
+	FWAIT
+	MOV	AH,BYTE PTR _NDPSW+1
+	SAHF
+	JBE	LOC
+	ENDM
+
+FTJG	MACRO	LOC			; test ST and jump if > 0.0
+	FTST
+	FJG	LOC
+	ENDM
+
+FJG	MACRO	LOC			; get status and jump if >
+	FSTSW	_NDPSW
+	FWAIT
+	MOV	AH,BYTE PTR _NDPSW+1
+	SAHF
+	JA	LOC
+	ENDM
+
+FTJGE	MACRO	LOC			; test ST and jump if >= 0.0
+	FTST
+	FJGE	LOC
+	ENDM
+
+FJGE	MACRO	LOC			; get status and jump if >=
+	FSTSW	_NDPSW
+	FWAIT
+	MOV	AH,BYTE PTR _NDPSW+1
+ 	SAHF
+ 	JAE	LOC
+	ENDM
+;
+; Set offset for stack addressing
+;
+	IF	LPROG
+X	EQU	6
+	ELSE
+X	EQU	4
+	ENDIF
+;
+; Make exception vector
+;
+EXBLOK	MACRO	CODE,NAME,ARG1,ARG2,RET
+	LOCAL	_EXN
+	DW	CODE
+	DW	OFFSET DGROUP:_EXN
+	IF	LDATA
+	DW	DGROUP
+	ENDIF
+	DQ	ARG1
+	DQ	ARG2
+	DQ	RET
+_EXN	DB	NAME,0
+	ENDM
+
+	IF	LDATA
+_EXSEG	EQU	2
+_EXA1	EQU	6
+_EXA2	EQU	14
+_EXR	EQU	22
+	ELSE
+_EXA1	EQU	4
+_EXA2	EQU	12
+_EXR	EQU	20
+	ENDIF
+	.LIST
