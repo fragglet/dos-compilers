@@ -6,3 +6,5 @@ having to run through the installers.
 Some superfluous files like code examples and help have been removed to
 save space.
 
+There are separate git branches for individual compilers if you just want one.
+
