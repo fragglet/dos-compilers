@@ -1,0 +1,210 @@
+#
+# default specs.owc file
+#
+system begin dos
+    ARCH i86 -bt=dos
+end
+system begin dos4g
+    ARCH i386 -bt=dos
+end
+system begin dos4gnz
+    ARCH i386 -bt=dos
+end
+system begin pharlap
+    ARCH i386 -bt=dos
+end
+system begin x32r
+    ARCH i386 -bt=dos
+end
+system begin x32rv
+    ARCH i386 -bt=dos
+end
+system begin x32s
+    ARCH i386 -bt=dos
+end
+system begin x32sv
+    ARCH i386 -bt=dos
+end
+system begin win386
+    ARCH i386 -bt=windows
+end
+system begin os2
+    ARCH i86 -bt=os2
+end
+system begin os2_pm
+    ARCH i86 -bt=os2
+end
+system begin os2_dll
+    ARCH i86 -bt=os2 -bd
+end
+system begin windows
+    ARCH i86 -bt=windows
+end
+system begin windows_dll
+    ARCH i86 -bt=windows -bd
+end
+system begin win_vxd
+    ARCH i386
+end
+system begin os2v2
+    ARCH i386 -bt=os2
+end
+system begin os2v2_pm
+    ARCH i386 -bt=os2
+end
+system begin os2v2_dll
+    ARCH i386 -bt=os2 -bd
+end
+system begin novell
+    ARCH i386 -bt=netware
+end
+system begin netware
+    ARCH i386 -bt=netware
+end
+system begin netware_libc
+    ARCH i386 -bt=netware
+end
+system begin netware_libc_lite
+    ARCH i386 -bt=netware
+end
+system begin netware_clib
+    ARCH i386 -bt=netware
+end
+system begin netware_clib_lite
+    ARCH i386 -bt=netware
+end
+system begin ads
+    ARCH i386 -bt=dos
+end
+system begin eadi
+    ARCH i386 -bt=dos
+end
+system begin fadi
+    ARCH i386 -bt=dos
+end
+system begin com
+    ARCH i86 -bt=dos
+end
+system begin qnx
+    ARCH i86 -bt=qnx
+end
+system begin qnx386
+    ARCH i386 -bt=qnx
+end
+system begin linux
+    ARCH i386 -bt=linux
+end
+system begin linuxmips
+    ARCH mips -bt=linux
+end
+system begin nt
+    ARCH i386 -bt=nt
+end
+system begin nt_win
+    ARCH i386 -bt=nt
+end
+system begin nt_dll
+    ARCH i386 -bt=nt -bd
+end
+system begin win95
+    ARCH i386 -bt=nt
+end
+system begin win32
+    ARCH i386 -bt=nt
+end
+system begin win32s
+    ARCH i386 -bt=nt
+end
+system begin tnt
+    ARCH i386 -bt=dos
+end
+system begin ntaxp
+    ARCH axp -bt=nt
+end
+system begin ntaxp_win
+    ARCH axp -bt=nt
+end
+system begin ntaxp_dll
+    ARCH axp -bt=nt -bd
+end
+system begin causeway
+    ARCH i386 -bt=dos
+end
+system begin cwdlls
+    ARCH i386 -bt=dos
+end
+system begin cwdllr
+    ARCH i386 -bt=dos
+end
+system begin dos32a
+    ARCH i386 -bt=dos
+end
+system begin dos32x
+    ARCH i386 -bt=dos
+end
+system begin stub32a
+    ARCH i386 -bt=dos
+end
+system begin stub32x
+    ARCH i386 -bt=dos
+end
+system begin stub32ac
+    ARCH i386 -bt=dos
+end
+system begin stub32xc
+    ARCH i386 -bt=dos
+end
+system begin pmodew
+    ARCH i386 -bt=dos
+end
+system begin pmodewi
+    ARCH i386 -bt=dos
+end
+system begin wdosx
+    ARCH i386 -bt=dos
+end
+system begin zrdx
+    ARCH i386 -bt=dos
+end
+system begin dos16m
+    ARCH i86 -bt=dos
+end
+system begin zdos
+    ARCH i386 -bt=zdos
+end
+system begin zdosfsd
+    ARCH i386 -bt=zdos
+end
+system begin zdoshwd
+    ARCH i386 -bt=zdos
+end
+system begin zdosdev
+    ARCH i386 -bt=zdos
+end
+system begin rdos
+    ARCH i386 -bt=rdos
+end
+system begin rdos_dll
+    ARCH i386 -bt=rdos -bd
+end
+system begin rdos_efi
+    ARCH i386 -bt=rdos -bd
+end
+system begin rdos_dev32
+    ARCH i386 -bt=rdosdev -zu
+end
+system begin rdos_dev16
+    ARCH i86 -bt=rdos_dev16
+end
+system begin rdosdev
+    ARCH i386 -bt=rdosdev -zu
+end
+system begin rdos_bin32
+    ARCH i386 -bt=rdos_bin32
+end
+system begin rdos_bin16
+    ARCH i86 -bt=rdos_bin16
+end
+system begin rdos_mboot
+    ARCH i86 -bt=rdos_mboot
+end
