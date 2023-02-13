@@ -1,0 +1,12 @@
+; INTR.AH: Structures and macros common to INTRSERV & OLDINT.
+; Copyright (c) 1986 Computer Innovations Inc, ALL RIGHTS RESERVED.
+
+; definition of icb offsets at beginning of intrserv.asm 
+
+ICB_OFF	        EQU	22
+STACK_SIZE	EQU     0
+SUB_SP		EQU     2
+NEW_ISR		EQU     4
+OLD_ISR		EQU     8
+INT_NUMBER	EQU     -6
+

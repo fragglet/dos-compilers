@@ -1,0 +1,1427 @@
+(READ.ME DISTRIBUTION DISKS)
+
+C86PLUS distributed files:
+
+  READ.ME               ; something to look at
+  INSTC86.EXE           ; installation program
+  INSTC86?.DAT          ; and required data files
+  C86INFO.EXE           ; indexed information driver
+  C86INFO.DAT           ; indexed information data file
+  CC.EXE                ; compiler driver
+  MAKE.EXE              ; program maintenance utility
+  ARCH.EXE              ; source code archival utility
+  MARION.EXE            ; object librarian utility
+  TOUCH.EXE             ; set file date stamp utility
+  RSIEVE.C              ; register sieve benchmark
+  C86PLUS.001           ; compiler .exe data file #1
+  C86PLUS.002           ; compiler .exe data file #2  
+  CAROLE.EXE            ; C86PLUS Linker
+  CBASESND.LIB          ; small model base library   (small code, small data)
+  CBASESFD.LIB          ; compact model base library (small code, large data)
+  CBASELND.LIB          ; medium model base library  (large code, small data)
+  CBASELFD.LIB          ; large model base library   (large code, large data)
+  CFPI.LIB              ; floating point emulator library       
+  CFPI87.LIB            ; floating point inline hardware lib
+  CFIOSND.LIB           ; print/scan/etc, small model lib     
+  CFIOSFD.LIB           ; print/scan/etc, compact model lib
+  CFIOLND.LIB           ; print/scan/etc, medium model lib    
+  CFIOLFD.LIB           ; print/scan/etc, large model lib     
+  CCOMMON.LIB           ; model independent library code
+  CIBMSND.LIB           ; ibm-pc small model lib
+  CIBMSFD.LIB           ; ibm-pc compact model lib
+  CIBMLND.LIB           ; ibm-pc medium model lib
+  CIBMLFD.LIB           ; ibm-pc large model lib
+  C386SND.LIB           ; 80386 run-time library code (small)
+  C386SFD.LIB           ; 80386 run-time library code (compact)
+  C386LND.LIB           ; 80386 run-time library code (medium)
+  C386LFD.LIB           ; 80386 run-time library code (large)	
+  *.H                   ; #include header files
+  CWILDSND.OBJ          ; small model wildcard argc,argv support
+  CWILDSFD.OBJ          ; compact model wildcard argc,argv support
+  CWILDLND.OBJ          ; medium model wildcard argc,argv support
+  CWILDLFD.OBJ          ; large model wildcard argc,argv support
+  CC.PIF                ; MSWindows Pif file for cc.exe
+
+(READ.ME C86PLUS CC CAROLE)
+
+Running C86PLUS:
+
+You MUST use the cc driver provided to run the compiler. Here are a
+few sample uses:
+
+To compile/link rsieve.c to direct object out in small model:
+
+   cc rsieve.c
+
+And to compile/link in large model:
+
+   cc -AL rsieve.c
+
+To compile rsieve.c to assembler (rsieve.asm) in medium model:
+
+   cc -c -AM -Fa rsieve.c
+
+Note that the linker will look for the C86PLUS libraries in the
+current directory. If it does not find them there, it will look
+at the environment variable C86LIB, which specifies where the
+libraries are.
+
+If you have done separate compilation, and wish to just link,
+leave the .c off the filename extension as follows:
+
+  cc -Fm rsieve
+
+For more information about library selection, select LIBRARIES
+at the C86INFO prompt.
+
+(LIBRARIES DEFAULTS LINKING *.LIB CBASE* C86LIB CAROLE)
+
+Library Organization:
+
+To Link a C86PLUS program, you normally need 4 libraries.
+
+LIBRARY 1 must be one of the following:
+
+  CFIOSND.LIB  - small model   [-AS == -Asnd]
+  CFIOSFD.LIB  - compact model [-AC == -Asfd]
+  CFIOLND.LIB  - medium model  [-AM == -Alnd]
+  CFIOLFD.LIB  - large model   [-AL == -Alfd]
+
+LIBRARY 2 is optional and may be one of the following:
+
+  CFPI.LIB    - floating point emulation library
+  CFPI87.LIB  - 8087 hardware version
+
+  You do not need LIBRARY 2 if you KNOW that your program has
+  no floating point code.
+
+LIBRARY 3 must be one of the following:
+
+  CBASESND.LIB - small model base library
+  CBASESFD.LIB - compact model base library
+  CBASELND.LIB - medium model base library
+  CBASELFD.LIB - large model base library
+
+LIBRARY 4 must be:
+
+  CCOMMON.LIB - compiler internals, model independent stuff
+
+C86PLUS will emit default library information into object files. 
+
+  Normally, you should link your program as follows:
+
+  cc program
+
+  If you have several .obj files, list them out:
+
+  cc -Feoutput.exe a.obj b.obj c.obj 
+
+  If you want a .MAP file, use -Fm:
+
+  cc -Fm foo
+
+  If you want to use an additional library:
+
+  cc -Fm foo -lcibmsnd -lotherlib
+
+  The .OBJ files emitted by the compiler already contain the default
+  library names to use.
+
+  Carole will look for libraries in the directory(ies) specified by
+  the C86LIB environment variable. If (and ONLY if) this variable is
+  not defined, then the current working directory will be searched. 
+  Normally you should set C86LIB by adding:
+
+    SET C86LIB=C:\C86PLUS\LIB
+
+  to your autoexec.bat file.
+
+
+See Section 2.2 of the User's Guide (Compiler Switches) for more
+information on what these options mean to your program.
+
+Note that running CC with no command line options will result
+in CC printing a table of available options.
+
+(ENVIRONMENT CC CAROLE LINKING)
+
+C86PLUS ENVIRONMENT VARIABLES:
+
+    C86INCLUDE - tell C86PLUS where to find your #include files
+
+        Example:
+
+                SET C86INCLUDE=C:\C86PLUS\INCLUDE
+
+    C86TMP - tell C86PLUS where to write your compilation temporary file:
+
+       Example:
+
+               SET C86TMP=C:\TMP
+
+       NOTE: The area specified by C86TMP normally requires anywhere from
+       256K to 2Mb of space. Compilation of a 500 line source file 
+       normally requires between 600KB and 1Mb of swap space in this area.
+       If you intend to use a virtual (or RAM) disk, please read the 
+       section here under RAM-DISK.
+        
+    C86LIB - tell the linker where to look for libraries:
+
+       Example:
+
+                SET C86LIB=C:\C86PLUS\LIB 
+
+
+    C86FLAGS - tell the cc driver what "standard options" you'd like:
+
+      Example:
+                SET C86FLAGS=-G0 -Ox -DJUNK
+
+      You may specify any command line flags that you would have otherwise
+      typed in directly to cc.
+
+   C86CAROLE - flags to be handed off to the linker (CAROLE).
+
+     Example:
+		
+	       SET C86CAROLE=-m -lcibmsnd.lib
+
+
+
+   Running out of environment space:
+
+   If you run out of environment space, you can increase it if you
+   are running DOS 3.0 or above. If you are running DOS 3.2 or
+   above, follow the directions in your DOS manual for setting
+   up the SHELL in CONFIG.SYS. If you are running DOS 3.0 or
+   3.1, you can add the following statement to your CONFIG.SYS
+   file:
+
+   SHELL=C:\COMMAND.COM C:\ /P /E:50
+
+   and reboot.
+
+   The statement above has 4 parts. The C:\COMMAND.COM is the path
+   specifying where your command processor is. C:\ is the path
+   where you boot (we think). /P tells DOS that COMMAND.COM cannot
+   be removed from memory (when EXIT is typed). /E:50 specifies
+   a number of paragraphs of environment space to reserve (in this
+   case 50). Each paragraph is 16 bytes long, so 50 paragraphs is
+   800 bytes. This is usually enough for most systems.
+
+   If you have problems configuring this, please thank MicroSoft,
+   as they provided no information on this until DOS 3.2, and
+   then they changed the /E parameter.
+
+(SYSTEM REQUIREMENTS MEMORY-USAGE RAMDISK)
+
+C86PLUS SYSTEM REQUIREMENTS:
+
+        C86Plus requires:
+
+                - an Intel 8086 family microprocessor 
+                        (8088,8086,80186,80286,80386)
+                - MS/PC-DOS 2.1 or above
+                - at least 400KB of available memory.
+                - at least 2MB of disk space
+
+       The minimal useful system for running C86PLUS is
+       a machine with 512KB main memory and a 10MB hard disk.
+       Anything above that is definitely a plus.
+       Anything below that will cause you aggravation.
+
+       Virtual disk usage:
+
+       C86Plus will make use of all of your main memory (not
+       including Extended or EMS)  through the normal DOS 
+       allocation mechanism. When that is exhausted, C86PLUS
+       will begin using a temporary disk file to store pieces
+       of your program. This file will be created in the
+       current directory by default, but you can set the
+       environment variable C86TMP to point to some other area.
+       
+       Advice for best operation:
+
+          - If you do not have any Extended memory (above 1 Megabyte),
+            do not set up a RAM drive in your main (DOS) memory, as
+            you will slow C86PLUS down considerably.
+
+          - If you do have 1 Megabyte or more of Extended memory, then
+            it will be worth it to set C86TMP to use it.
+            
+          - If you have a hardware card that allows you to access
+            the memory between 640K and 1Mbyte, and that card
+            comes with a driver that lets DOS use the memory, then
+            C86PLUS will automatically benefit from it.
+
+
+(FGETPOS FSETPOS FPOS_T)
+
+fgetpos
+
+Synopsis
+
+   #include <stdio.h>
+   int fgetpos(FILE *stream, fpos_t *pos)
+
+Description
+  
+   The fgetpos function stores the current value of the file position
+   indicator for the stream pointed to by 'stream' in the object pointed
+   to by 'pos'. The value stored is intended for use by fsetpos().
+
+Returns
+
+    zero on success, non-zero otherwise
+
+Notes
+
+    fpos_t is type defined in stdio.h
+
+See Also
+
+    fsetpos()
+
+----------------------
+fsetpos
+
+Synopsis
+
+   #include <stdio.h>
+   int fsetpos(FILE *stream, fpos_t *pos)
+
+Description
+  
+   The fsetpos function sets the file pointer for 'stream' to the 
+   offset indicated by 'pos'. The value used must have been obtained 
+   from fgetpos().
+
+Returns
+
+    zero on success, non-zero otherwise
+
+Notes
+
+    fpos_t is type defined in stdio.h
+
+See Also
+
+    fgetpos()
+
+
+(MEMMOVE)
+
+memmove
+
+Synopsis
+   
+   void *memmove(void *s1, const void *s2, size_t n)
+
+Description
+
+   memmove copies n characters from s2 to s1. Copying between objects
+   takes place correctly.
+
+Returns
+
+   memmove returns the value of s1.
+
+
+(DIV DIV_T LDIV LDIV_T)
+
+div, div_t
+
+Synopsis
+
+   div_t div(int numerator, int denominator)
+
+Description
+
+   div computes the quotient and remainder of the division of the 
+   numerator by the denominator. See idiv in the C86PLUS manual.
+
+Returns
+
+   returns structure of type div_t, comprising both the quotient and
+   the remainder. The structure contains the following members:
+
+    int quot; /* quotient */
+    int rem;  /* remainder */
+
+ldiv, ldiv_t
+
+The function ldiv behaves as specified in the C86PLUS manual, but the
+structure members are quot and rem.
+
+(STRTOUL)
+
+strtoul
+
+Synopsis
+  
+  unsigned long strtoul(const char *nptr, char **endptr,int base)
+
+Description
+
+  strtoul converts the initial portion of the string pointed to by
+  nptr to unsigned long representation. See the description of
+  strtol() in the C86PLUS Reference Manual for details. strtoul
+  behaves exactly as strtol, except, the string cannot contain any
+  leading '+' or '-', and the converted value is unsigned long.
+
+Returns
+
+  The converted value, if any. If no conversion could be performed,
+  zero is returned. If the correct value would cause overflow, 
+  ULONG_MAX is returned, and errno acquires the value ERANGE.
+
+(INTRSET)
+
+intrset
+
+Synopsis
+  
+  int intrset(void (far * isr)(), 
+              unsigned frame_size,
+              unsigned vecno,
+              char *stack_base,
+              unsigned stack_size)
+
+Description
+
+  Intrset is a function used to initialize for interrupt processing.
+  It is a superset of the old function intrinit, with more general
+  application.  The major differences are that the level of
+  re-entrancy is set explicitly using frame_size (the size of
+  stack for one instance of the user function "isr") and that
+  the values of all the CPU registers is available to the user
+  function (see intr.h).
+
+  The user function is called with one argument, a pointer to the
+  CPU register values.  These values may be modified and the modified
+  values will be returned to the CPU registers when the user function
+  terminates.
+
+Returns
+
+  Zero if the service routine is successfully setup, -1 otherwise.
+
+(ATEXIT ONEXIT)
+
+atexit
+
+Synopsis
+  
+  int atexit(void (*func)(void));
+
+Description
+
+  See onexit in the C86PLUS Reference manual. atexit() performs the
+  same function.
+
+
+(ASSEMBLY REGISTERS CONVENTIONS RETURN)
+
+        Data Type               Return Register(s)
+
+        char                    AX
+        unsigned char           AX
+        short                   AX
+        unsigned short          AX
+        int                     AX
+        unsigned int            AX
+        near pointer            AX
+        enum                    AX
+    
+        long                    High Word in DX, Low Word in AX
+        unsigned long           High Word in DX, Low Word in AX
+        far pointer             Segment in DX, Offset in AX
+
+        structure               pointer to data
+        union                   pointer to data
+        float                   pointer to data  
+        double                  pointer to data
+
+(IBMPC)
+
+IBM-PC Specific functions libraries
+
+There are a set of functions in the runtime library that are usable
+only on machines that support the IBM-PC,XT or AT ROM BIOS interrupts
+for communications, keyboard input, and crt output. These functions
+have names that start with crt_, com_, and key_. If you wish to
+use these functions, you will have to link in one of the following
+libraries, depending on the memory model you are using:
+
+    CIBMSND.LIB - small model (-AS)
+    CIBMSFD.LIB - compact model (-AC)
+    CIBMLND.LIB - medium model (-AM)
+    CIBMLFD.LIB - large model (-AL)
+
+Linkage example: (small model)
+
+   carole -m -s0x2000 test -lcibmsnd -lcfiosnd -lcfpi -lcbasesnd -lccommon
+
+or, using cc:
+
+   cc -Fm -F2000 test -lcibmsnd -lcfiosnd -lcfpi -lcbasesnd -lccommon
+
+These files have been placed in separate libraries so that it is more
+obvious which functions are "MS/PC-DOS generic" and which are "IBM-PC
+specific".
+
+
+(WILDCARD ARGV)
+
+Wildcard expansion of commands into argc,argv:
+
+  Command line filename expansion is available for use by your
+  C86PLUS programs. To enable this option, all you have to do
+  is link in one of CWILDSND.OBJ (small model), CWILDLND.OBJ (medium),
+  or CWILDLFD.OBJ (large model), as follows:
+
+  Example small model compilation, linkage:
+
+  cc -c -AS program.c
+  link program cwildsnd,,,cfiosnd cfpi cbasesnd cccommon /map /stack:2000;
+
+  Programs linked in such a fashion will process asterisks (*)
+  and question marks (?) on command lines as referring to 
+  a list of filenames that match the given filespec.  Arguments
+  may be specified in double quotes (") to override this feature
+  on a per-argument basis:
+
+  program one two*.c three.??? etc "this*.*"
+
+  In the above example, two*.c and  three.??? will be expanded
+  to a list of filenames that match and put into the argv[]
+  vector that is passed to main. Arguments without asterisks
+  or question marks in them and arguments in double quotes
+  will be passed "as is" into argv[].
+
+(LANGUAGE SYNTAX NEAR FAR HUGE)
+
+  The syntax for the keywords "near", "far", and "huge" was incorrectly
+  documented as if it was identical to the usage of "const" and 
+  "volatile".  These modifiers modify the item to the right and
+  so 
+
+  int far * thing;
+
+  will result in a 32 bit pointer, irrespective of the compiler
+  data model chosen.
+
+  The syntax for "const" and "volatile" is correct.
+
+(REGISTRATION TECH-SUPPORT UPDATES)
+
+  You must return your registration card to receive technical
+  support or to receive updates under a maintenance contract.
+
+(SOPEN FCNTL.H SHARE.H SYS/STAT.H)
+
+  #defines for the arguments to sopen() are defined in the following
+  header files -- fcntl.h for argument 2 (open modes), share.h for
+  argument 3 (sharing premission level), and sys/stat.h for argument 4
+  (read/write permission).
+
+(PROBLEMS BUGS ERRORS)
+
+  If you encounter bugs in programs compiled with C86PLUS, please
+  let us know. Call 201-542-5920 and ask for Technical Support. 
+ 
+  When reporting bugs, it may be helpful to get the assembler output
+  for a particular file, as we may be able to ask you questions about
+  the code produced. The assembly output listing generated by
+  C86PLUS contains C source, Intel assembler instructions and
+  the machine opcodes (as comments).  This information is very
+  helpful in locating code generation bugs.
+
+
+(80386)
+
+  C86Plus now supports code generation for the 80386 in real mode.
+  If you select -G3 as a code generation option, the code generator 
+  will select smaller and faster 80386 instruction sequences where 
+  appropriate. These instructions are intended to run in existing 
+  memory models, when the processor is in real (not protected) mode. 
+  Code produced using the -G3 option will not run on an 80286 or 
+  an 8086/88 system. The libraries C386???.lib contain code that
+  takes advantage of the 386 processor. They will automatically
+  be linked in if you specify -G3 when you compile.
+
+
+(DEFINES)
+
+  C86PLUS predefines several preprocessor symbols:
+
+        CII
+        C86PLUS
+        MSDOS
+        
+  in addition to those documented in the manual.
+
+(CC OPTIONS)
+
+New compiler options (not mentioned in the documentation):
+
+You can rename the data group, text (code) area and module identifier
+'theadr' for the object module produced by the compiler. Normally
+this is not necessary, but may be needed for various yet-to-be-defined
+operations (such as unusual program linking requirements). The
+flags involved are:
+
+        -NDname         set data group to 'name'
+        -NMname         set module to 'name'
+        -NTname         set text (code) segment to 'name'
+
+(TIME-FUNCS)
+
+The example shown in the manual for the gmtime() function is faulty;
+the time() function takes an argument which is a pointer to a data area
+to be filled in by the time() function. It is called in the gmtime()
+example without arguments.
+
+The example for the localtime() function is also faulty. The localtime()
+function takes a pointer to a type time_t as an argument and the time()
+function returns the value itself. There must be an intermediate assignment
+so that an indirection (address) may be taken between the call to time()
+and the call to localtime().
+
+The values used in the broken-down time structure, struct tm, are noted
+in the comments in the structure definition in time.h. If you're going
+to use this structure, check the expected values.
+
+(ANSI-SPEC)
+
+A copy of the proposed ANSI standard for the C programming language may
+be obtained from the Computer and Business Equipment Manufacturers
+Association at:
+
+        CBEMA
+        311 First Street, NW
+        Suite 500
+        Washington, DC  20001-2178
+        (202) 737-8888
+
+There is a fee.
+
+(GENERAL-COMMENTS)
+
+Information in this file is intended to supplement and correct errors
+in the printed documentation.  Corrections and additions to the printed
+documentation will be supplied to registered owners, with software updates,
+as they become available.
+
+We expect to update the compiler on a fairly regular cycle.  Our
+priorities at this time are:
+
+        1.  Correct code
+        2.  Fast code
+        3.  Faster, smaller compiler
+        4.  Additional features
+
+(NON-IBM-MACHINES NON-STANDARD-HARDWARE NO87)
+
+We have discovered a number of problems running the compiler and 
+generated programs in machines with NON-IBM add-on hardware.  
+Especially graphics boards.  If you find that the compiler does
+unusual things, try adding
+
+        SET NO87=TRUE
+
+to your autoexec.bat file.  If this cures the problems we would
+like to know, and will attempt to find a solution that does not
+disable your floating point hardware.
+
+
+(PRE-PROCESSOR ANSI-EXTENSIONS)
+
+Ansi C has made two major changes to the pre-processor system.  The
+first is the "stringizing" operator.  For example, the macro:-
+
+        #define ASTRING(aaa)    #aaa
+
+when used in a program
+
+        ASTRING(words)
+
+Results in the equivalent C code
+
+        "words"
+
+To be precise, the expansion of the macro argument aaa is placed
+in double quotes, without leading or trailing spaces.  The following
+macro can be used to build a string with two words, with a space
+between the words:-
+
+        #define STRING2(aaa,bbb)        #aaa " " #bbb
+
+Adjacent strings are collapsed into one long string by the compiler.
+Under C86, the above macro would have been written
+
+        #define OLD_STRING2(aaa,bbb)    "aaa bbb"
+
+THe second new operator is the token pasting operator "##".
+It is used during macro expansion to build a composite token.  This
+feature is mainly intended to be used by programs such as YACC.  FOr
+example, the macro
+
+        #define PASTEY(aaa,bbb)         aaa ## bbb
+
+When called in a program, such as
+
+        PASTEY(symbol,001) = 23;
+
+Results in the Equivalent line of code:
+
+        symbol001 = 23;
+
+This area of the macro pre-processor is in some flux, and we 
+suggest that this feature be avoided.  It is probable that this
+feature will change, as ANSI reviews the paste operator.
+
+(PRE-PROCESSOR MEMORY-MODELS IFDEF)
+
+The compiler will define several symbols which can be used with the
+#ifdef preprocessor directive for compilation which is conditional
+on the selected memory model. Three definitions will be made for
+each compilation. They reflect the code size, data size, and data
+segmentation layout for the compile. They take the form
+
+	_FLAGS_Ax
+
+where the 'x' changes from model to model. For example, when compiling
+for Small Model (with the -AS or -Asnd compiler switches) the symbols
+"_FLAGS_As", "_FLAGS_An", and "_FLAGS_Ad" will be defined for the life
+of the compile. The 's', the 'n', and the 'd' in the defined symbols
+are identical to the letters in the "-Asnd" switch in the command line
+which specifies the memory model to the compiler.
+
+See section 2.2 or 4.3 of the User's Manual for a description of the
+various memory models and compiler switches.
+
+(MASM ASSEMBLY-CODE LINKING-ERRORS)
+
+If you write a function in assembly code, or assemble the output of
+the compiler, you need MASM V4.0.  Don't forget to use the /mx switch,
+so that symbol names are not forced to upper case.  Also use /e or
+/r (for emulator or real) if the code includes floating point instructions.
+Eg.  To assemble foo.asm the minimum command line is:-
+
+             MASM foo/mx;
+
+Alternatively, you can use cc to do this:
+
+	cc -c foo.asm
+
+cc will spawn MASM for you.
+
+
+(BESSEL)
+
+Bessel Functions:
+
+j0
+
+Synopsis
+
+   double j0(double x)
+	
+Description
+
+   j0 computes the Bessel function of the first kind of 0th order.
+
+Returns
+   
+   returns the value of Bessel function J0(x) for any real x.
+
+
+j1
+
+Synopsis
+
+   double j1(double x)
+	
+Description
+
+   j1 computes the Bessel function of the first kind of 1st order.
+
+Returns
+   
+   returns the value of Bessel function J1(x) for any real x.
+
+
+jn
+
+Synopsis
+
+   double jn(int n, double x)
+
+Description
+
+   jn computes the Bessel function of the first kind of nth order,
+   where n is any nonzero positive integer number.
+
+Returns
+
+   returns the value of Bessel function Jn(x) for any nonzero positive 
+   real x. If x is zero or negative or if n is negative then it returns 
+   a value 0.0 .
+
+y0
+
+Synopsis
+
+   double y0(double x)
+	
+Description
+
+   y0 computes the Bessel function of the second kind of 0th order.
+
+Returns
+
+   returns the value of Bessel function Y0(x) for any nonzero positive
+   real x. If x is zero or negative, it returns a large negative number
+   1.0e-308 .
+
+
+y1
+
+Synopsis
+
+   double y1(double x)
+	
+Description
+
+   y1 computes the Bessel function of the second kind of 1st order.
+
+Returns
+    
+   returns the value of Bessel function Y1(x) for any nonzero positive
+   real x. If x is zero or negative, it returns a large negative number
+   1.0e-308 .
+
+
+yn
+
+Synopsis
+
+   double yn(int n, double x)
+
+Description
+
+   jn computes the Bessel function of the second kind of nth order,
+   where n is any positive integer number.
+
+Returns
+
+   returns the value of Bessel function Yn(x) for any nonzero positive 
+   real x. If x is zero or negative or if n is negative then it returns 
+   a large negative number 1.0e-308 .
+
+Example
+
+	#include <stdio.h>
+	#include <math.h>
+
+	main()
+	{
+	int i;
+	double x;
+
+	printf("Bessel function of first kind:\n\n\n");
+	printf("  x         J0         J1         J2         J3\n\n");
+
+	for (i=-5;i<=5;i++) {
+	    x = ((double)i)/2.0;
+	    printf("%5.2f   %8.4f   %8.4f   %8.4f   %8.4f\n",
+	    	         x, j0(x), j1(x), jn(2,x), jn(3,x));
+        }
+	printf("\n\n\n");
+	
+	printf("Bessel function of second kind:\n\n\n");
+	printf("  x          Y0            Y1            Y2            Y3\n");
+	printf("\n");
+
+	for (i=0;i<=5;i++) {
+       	     x = ((double)i)/2.0;	 
+	     printf("%5.2g   %11.4g   %11.4g   %11.4g   %11.4g\n",
+	     	         x, y0(x), y1(x), yn(2,x), yn(3,x));
+	}
+	printf("\n\n\n");
+
+	}
+
+
+(SOURCE ARCHIVES LIBRARY)
+
+Source code to the run-time libraries is shipped with each C86PLUS
+Update. You must send in your C86PLUS Registration Card to receive
+an update with source.
+
+The Source Files are in an archive format (maintained by our ARCH utility).
+The files are organized as follows:
+
+	CBASEC.ARC - Source for the CBASExyz libraries. Contains .C files.
+	CBASEA.ARC - Source for the CBASExyz libraries. Contains .ASM files.
+	CFIO.ARC - Source for the CFIOxyz libraries. 
+	CFPI.ARC - Source for the CFPIxyz libraries.
+	CIBM.ARC - Source for the CIBMxyz libraries.
+	C386.ARC - Source for the C386xyz libraries.
+
+Makefiles are also included, in case you wish to rebuild some file(s).
+
+
+
+(DEBUGGING CIPROBE PFIX86PLUS CODEVIEW)
+
+C86PLUS Debugging Support:
+
+The number one rule for doing any debugging with C86PLUS is 
+DISABLE OPTIMIZATION. Without this, you will be giving yourself
+some real pain. We do some real gyrations to your code in this compiler.
+
+Here are some examples for several debugging tools:
+
+CI-PROBE (ATRON):
+
+        cc -Od -Zd -Fm hello.c
+        strip hello.map,hello.mp1,strip.c86
+        ciprobe
+                -load hello.exe
+                -load s hello.mp1        
+                -symbol .start=cs:ip
+                -asi ..hello hello.c
+                ...
+
+PFIX86PLUS (PHOENIX SOFTWARE):
+
+        cc -Od -Zd -Fm hello.c
+        addsyms hello
+        pfixplus hello
+
+        OR
+
+        cc -c -Od -Zd -Fm hello.c
+        plink fi hello symtable map
+        pfixplus hello
+
+CODEVIEW (MICROSOFT):
+
+        cc -Od -Zi -Fm hello.c
+        cv hello
+
+For other debuggers, we suggest starting with:
+
+        cc -Od -Zd -Fm hello.c
+
+This will:
+
+         1) disable optimization                (-Od)
+         2) give you line numbers               (-Zd)
+         3) cause the linker to build a MAP     (-Fm)
+
+Information suitable for most source level debuggers can be 
+produced using the compiler switch "-Zd" and the carole
+switch "-Fm".  The result is a link file containing the data
+required by CI-PROBE, PFIXPLUS, PERISCOPE and other similar
+debugging programs.  For example:
+
+        cc -Zd -Fm -Od rsieve.c
+
+You then need to consult your debugger manual, for details
+on how to extract the information from the ".MAP" file.
+
+
+It's also a good idea to use the -Ge switch during the development
+of a program. This option will place stack-checking code at the 
+entry to each function in your program. 
+
+(FGETCHAR)
+
+Synopsis
+
+	#include <stdio.h>
+	int fgetchar();
+
+Description
+
+	The fgetchar function reads the character c from stdin. 
+	It is a function version of getchar().
+
+Returns
+
+	The fgetchar function returns the character read from stdin.
+
+
+
+(FPUTCHAR)
+
+Synopsis
+
+	#include <stdio.h>
+	int fputchar(c);
+	int c;
+
+Description
+
+	The fputchar function writes the character c on stdout. 
+	It is a function version of putchar(c).
+
+Returns
+
+	The fputchar function returns the character written on stdout.
+
+
+(MKTIME)
+
+Synopsis
+
+	#include <time.h>
+	time_t mktime(struct tm *timeptr)
+
+Description
+
+	The mktime function converts the broken-down time, expressed as 
+local time, in the structure pointed to by timeptr, into a calender 
+time value with the same encoding as that of a value returned by time 
+function. The original values of the tm_wday and tm_yday components of 
+the structure are ignored and on successful compltion, their values are
+set appropriately.
+
+Returns
+
+	The mktime function returns the specified calender time 
+	encoded as a value of type time_t.
+
+Example:
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <time.h>
+
+main()
+{
+	struct stat buf;
+	time_t  *st, sec;
+	struct tm *timeptr; 
+
+	stat("junk.c", &buf);   /* access junk.c in current directory */
+	st = &(buf.st_mtime);
+	timeptr=localtime(st);
+	printf("Time= %s\n",ctime(st));	 /* print last modified time */
+	timeptr->tm_wday = 999; 
+	timeptr->tm_yday = 999;
+	sec = mktime(timeptr);
+	printf("Time= %s\n",ctime(&sec));  /* time printed should be same */
+}				
+
+
+				
+ 
+(_EXIT)
+
+Synopsis
+
+	#include <process.h>
+	#include <fileio3.h>
+
+	void _exit(code);
+	int code;
+
+Description
+
+	The _exit function closes all the files, removes all 
+	the temporary files, frees memory blocks 
+	and restores emulator vectors.
+
+See Also
+
+	exit()
+
+Classification
+
+	Guru
+
+(TEMPNAM)
+
+Synopsis
+
+	#include <malloc.h>
+	#include <string.h>
+
+	char *tempnam(path, name)
+	char *path, *name;
+
+Description
+
+	The tempnam function creates a unique file name 
+	with path processing.
+
+See Also
+
+	tmpnam()
+
+
+(BRIEF)
+
+Compiling from within the BRIEF(tm) editor:
+
+You can compile from within the BRIEF editor on a 640K+ machine. On
+a 640K machine, using BRIEF 2.0+, tell SETUP that you wish to reserve
+between 350 and 400Kbytes of memory for C86PLUS. Above 400, there will
+not be enough for BRIEF, below 350, C86PLUS will not run. We suggest
+that you specify 375.
+
+If you are running an older version of BRIEF (<2.0), you can achieve
+similar results by using the -M flag to regulate how much memory BRIEF
+will use for buffer space. We suggest using a value somewhere between
+-M30 and -M60.
+
+If you are fortunate enough to have a MAXIT(tm) card on your 
+AT (available from McGraw Hill), you may have 704K or more memory
+available on your system, then you would be well advised to tell
+BRIEF that that C86PLUS needs 512K or more. This way your compile
+times will be better.
+
+If you are compiling a very large file (500+ lines), or you are
+compiling on a slow machine (XT), you may be better off leaving BRIEF
+and compiling straight from DOS, as the extra memory available to
+C86PLUS will cut your compile time by more than the amount of time it
+takes to reload BRIEF. However, if you are in the habit of building
+source modules of about 200 lines or less, you should be able to
+compile from within BRIEF without suffering from very much compile
+speed degradation.
+
+
+(SWITCHES OPTIONS MEMORY-MODELS)
+
+  -AS generates Small model code   (small code and small data).
+  -AM generates Medium model code  (large code and small data).
+  -AC generates Compact model code (small code and large data).
+  -AL generates Large model code   (large code and large data).
+
+As an alternative, the code size, data size, and data segmentation may
+be specified separately by compiling with "-Axyz", where "x" specifies
+code size, "y" specifies data size, and "z" specifies
+data segmentation.
+
+  -As__ generates Small code.
+  -Al__ generates Large code.
+  -A_n_ generates Near (small) data.
+  -A_f_ generates Far (large) data.
+  -A_h_ generates Huge data.
+  -A__d assumes the Default data segmentation (stack and data in the
+	same segment).
+  -A__w assumes the Wide data segmentation (separate stack and data).
+  -A__u assumes the Unlimited data segmentation (separate stack and
+	multiple data segments).
+
+For example, -Asnd is equivalent to -AS and -Alfd is equivalent to -AL.
+
+The following options should not ordinarily be used:
+
+  -NDname specifies a "name" for the Data Segment.
+  -NMname specifies a "name" for the object module (NOT the object FILE).
+  -NTname specifies a "name" for the Code Segment.
+
+
+(SWITCHES C86PLUS-OUTPUT)
+
+  -Fafilename generates assembly output rather than an object file. If no
+	"filename" is specified, the root name of the source file is used.
+  -Fefilename allows you to name the generated executable file.
+  -Fm produces a map file.
+  -Fofilename allows you to name the generated object file.
+
+(SWITCHES OPTIONS CODE-GENERATION)
+
+  -FPi   generates floating point instructions for the emulator.
+  -FPi87 generates in-line instructions for a Numeric Coprocessor to
+          handle floating point code.
+  -G0    generates code for an 8088 or 8086 CPU. This code will also
+          run on an 80186, an 80286, or an 80386.
+  -G1    generates code for an 80186 CPU. This code will also run on an
+          80286 or an 80386.
+  -G2    generates code for an 80286 CPU. This code will also run on an
+          80386.
+  -G3    generates code for an 80386 CPU.
+  -Ge    enables stack checking on function entry.
+  -Gs    disables stack checking.
+
+
+(SWITCHES OPTIONS OPTIMIZATION)
+
+  -Oa ignores aliasing (for example, two pointers which point to the
+       same data item). 
+  -Od disables optimization.
+  -Os optimizes for program size.
+  -Ot optimizes for program speed (time).
+  -Ox disables stack checking and optimizes for program speed.
+
+(SWITCHES OPTIONS LINKING)
+
+  -Fhex_value specifies the stack size in bytes.
+  -llibrary names a "library" to be inluded in the linkage step.
+  -Zl disables default library information in the object(s).
+
+(SWITCHES OPTIONS DEBUGGING)
+
+  -E echoes the Preprocessor output to stdout.
+  -w disables compile-time warnings.
+  -Wn sets the compile-time warning level. -W0 disables warnings and
+        -W3 will report the most warnings.
+  -Zd puts line number records into the object file.
+  -Zi generates Codeview records.
+  -Zs runs a syntax check only.
+
+(SWITCHES OPTIONS)
+
+  -c compiles without linking.
+  -Didentifier compiles with the "identifier" defined (for use with
+        #ifdef).
+  -Ipath specifies a "path" to be searched for #include files.
+  -Uidentifier #undefines the "identifier" for this compilation (for
+        use with #ifdef).
+  -Vstring writes the "string" into the generated object file as a
+        comment record.
+  -X tells the compiler to ignore the C86INCLUDE environment variable.
+  -Za removes C86PLUS extentions to the (ANSI spec) language.
+  -Zp tells the compiler to pack data. Normally, static data items
+	are aligned on word boundaries. This switch allows byte alignment.	
+
+(ENVIRONMENT)
+
+  C86FLAGS sets default compiler options.
+  C86TMP specifies the path for compiler-generated temporary files.
+        On an IBM PC-AT or on other machines with access to extended memory
+        above one Meg, this variable is typically used with a virtual disk.
+  C86INCLUDE tells the compiler where to look for files which are #included
+        in a program.
+  C86LIB tells the linker where to look for libraries.
+  C86CAROLE sets default linker options. These flags will be set in
+        addition to any linker switches set by C86FLAGS or specified on
+        the cc command line.
+  NO87 tells your program to ignore a Numeric Coprocessor (8087) if one
+        is present.
+
+
+(CAROLE LINKER)
+  -d generates a Codeview-compatable executable file.
+  -llibrary specifies a "library" to be included in the link.
+  -Lpath overrides the C86LIB environment variable and specifies the "path"
+        to be searched for the libraries.
+  -m produces a map file.
+  -N tells Carole to ignore library information in the objects.
+  -oname is used to "name" the output (executable) file.
+  -r tells Carole to read object file names from stdin.
+  -ssize specifies a stack "size", in bytes. The number is specified the
+        same way as in the C language, as a decimal, octal, or hexadecimal
+        value.
+  -U converts all symbols to upper case. C86PLUS and Carole are normally
+        case sensitive.
+  -v generates verbose output.
+
+
+(MARION OBJECT-LIBRARIAN LIBRARIES)
+        marion <switches> <library> <module(s)>
+
+  -b creates a backup library before doing anything else.
+  -d deletes the module(s) from the library.
+  -e supresses checksum errors.
+  -l lists the names of modules in the library and public symbols defined
+        and external references requested in the modules.
+  -m lists the modules in the library.
+  -n creates a new library.
+  -r tells Marion to read module names from stdin. This can be used in
+        conjunction with the -m switch.
+  -u updates a library by adding the named modules to the library.
+  -v generates verbose output.
+  -x extracts copies of the modules from the library.
+
+
+The C86PLUS runtime environment is contained in the following libraries:
+
+  CIBMxxx.LIB contains routines which are specific to the IBM-PC ROM BIOS.
+  CFIOxxx.LIB contains the formatted I/O routines and the basic program
+        startup code.
+  CFPI.LIB contains the floating point emulator.
+  CFPI87.LIB contains the startup code for the Numeric Coprocessor.
+  CBASExxx.LIB contains the bulk of the runtime environment and library
+        support routines.
+  CCOMMON.LIB contains routines which are called internally by the
+	compiler.
+
+These libraries should be linked in the order in which they are described.
+The "xxx" appearing in some library names is different for each memory
+model. For example, the Small model base library is called cbasesnd.lib.
+The Large model base library is called cbaselfd.lib. Any additional
+libraries which are to be linked into the program should be specified
+BEFORE the C86PLUS libraries on the link line.
+
+
+(ARCH SOURCE-ARCHIVER)
+        arch <switches> <archive> <file(s)>
+
+  -d deletes the file from the archive.
+  -m prints the names of the modules in the archive.
+  -p prints the named file to {\tt stdout}.
+  -r reads file names from {\tt stdin}. This can be used in conjunction with
+        the -m switch to update all the files in an archive, for example.
+  -t prints the contents of the archive in tabular form to stdout. The table
+        includes the files' names, sizes, and dates.
+  -u updates the archive with the named file.
+  -v makes the archiver verbose.
+  -x extracts the file from the archive.
+
+The source code for the C86PLUS runtime library is contained in the
+following archives:
+
+  CBASEC.ARC contains the majority of the runtime environment which was
+        written in C.
+  CBASEA.ARC contains most of the runtime routines which are coded in
+        assembly language.
+  CFPI.ARC contains code which is heavily dependant on a Numeric Coprocessor
+        or emulator.
+  CFIO.ARC contains the formatted Input/Output routines and the assembly
+        language startup code.
+  CIBM.ARC contains routines which are dependant on the IBM-PC ROM BIOS.
+
+
+(MAKE)
+
+  -a (all) tells make to rebuild everything regardless of the dates and
+        times of files.
+  -f (file) tells make to assume that the next item on the command line
+        is the name of a file to be used instead of "makefile".
+  -h (help) prints a help screen.
+  -i (ignore errors) tells make to ignore errors encountered while
+        rebuilding items. ERRORS IN BATCH FILES ARE ALWAYS IGNORED.
+  -n (no execute) just prints the command lines to the screen which
+        it would otherwise execute.
+  -o (override) tells make to treat the next item on the command line as
+        a file name and to assume that file is up to date.
+  -t (touch) tells make to touch any files which it normally would have
+        rebuilt.
+
+
+
+()READ.ME 0
+DISTRIBUTION 0
+DISKS 0
+READ.ME 946
+C86PLUS 946
+CC 946
+CAROLE 946
+LIBRARIES c77
+DEFAULTS c77
+LINKING c77
+*.LIB c77
+CBASE* c77
+C86LIB c77
+CAROLE c77
+ENVIRONMENT 1418
+CC 1418
+CAROLE 1418
+LINKING 1418
+SYSTEM 1cdd
+REQUIREMENTS 1cdd
+MEMORY-USAGE 1cdd
+RAMDISK 1cdd
+FGETPOS 237c
+FSETPOS 237c
+FPOS_T 237c
+MEMMOVE 270c
+DIV 2812
+DIV_T 2812
+LDIV 2812
+LDIV_T 2812
+STRTOUL 2a5f
+INTRSET 2cf7
+ATEXIT 30ae
+ONEXIT 30ae
+ASSEMBLY 3168
+REGISTERS 3168
+CONVENTIONS 3168
+RETURN 3168
+IBMPC 3478
+WILDCARD 383c
+ARGV 383c
+LANGUAGE 3c79
+SYNTAX 3c79
+NEAR 3c79
+FAR 3c79
+HUGE 3c79
+REGISTRATION 3e17
+TECH-SUPPORT 3e17
+UPDATES 3e17
+SOPEN 3ebe
+FCNTL.H 3ebe
+SHARE.H 3ebe
+SYS/STAT.H 3ebe
+PROBLEMS 3fd4
+BUGS 3fd4
+ERRORS 3fd4
+80386 41f2
+DEFINES 4456
+CC 4504
+OPTIONS 4504
+TIME-FUNCS 4718
+ANSI-SPEC 4a2b
+GENERAL-COMMENTS 4b6b
+NON-IBM-MACHINES 4d57
+NON-STANDARD-HARDWARE 4d57
+NO87 4d57
+PRE-PROCESSOR 4f30
+ANSI-EXTENSIONS 4f30
+PRE-PROCESSOR 5497
+MEMORY-MODELS 5497
+IFDEF 5497
+MASM 5825
+ASSEMBLY-CODE 5825
+LINKING-ERRORS 5825
+BESSEL 5a21
+SOURCE 6428
+ARCHIVES 6428
+LIBRARY 6428
+DEBUGGING 66f4
+CIPROBE 66f4
+PFIX86PLUS 66f4
+CODEVIEW 66f4
+FGETCHAR 6dff
+FPUTCHAR 6f07
+MKTIME 701a
+_EXIT 746f
+TEMPNAM 75a0
+BRIEF 7691
+SWITCHES 7bfa
+OPTIONS 7bfa
+MEMORY-MODELS 7bfa
+SWITCHES 80e2
+C86PLUS-OUTPUT 80e2
+SWITCHES 822b
+OPTIONS 822b
+CODE-GENERATION 822b
+SWITCHES 84c1
+OPTIONS 84c1
+OPTIMIZATION 84c1
+SWITCHES 85f2
+OPTIONS 85f2
+LINKING 85f2
+SWITCHES 86c4
+OPTIONS 86c4
+DEBUGGING 86c4
+SWITCHES 8828
+OPTIONS 8828
+ENVIRONMENT 8ac6
+CAROLE 8d8b
+LINKER 8d8b
+MARION 9086
+OBJECT-LIBRARIAN 9086
+LIBRARIES 9086
+ARCH 9706
+SOURCE-ARCHIVER 9706
+MAKE 9bae
+    9ea3

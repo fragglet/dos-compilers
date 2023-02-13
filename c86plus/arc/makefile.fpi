@@ -1,0 +1,56 @@
+# makefile for the floating point emulator libraries
+
+#  4dec86 zap  First cut.
+# 19jan87 zap  Add floating formatted I/O routines.
+
+OBJ= objsfp
+
+$(OBJ)\_fprntsn.obj: src\_fprntxx.c \headers\stdio.h \headers\stdarg.h \
+		\headers\ctype.h 
+	cc -c -AS -Zl src\_fprntxx.c -Fo_fprntsn
+	copy _fprntsn.obj $(OBJ)
+	del _fprntsn.obj
+
+$(OBJ)\_fprntsf.obj: src\_fprntxx.c \headers\stdio.h \headers\stdarg.h \
+		\headers\ctype.h 
+	cc -c -AC -Zl src\_fprntxx.c -Fo_fprntsf
+	copy _fprntsf.obj $(OBJ)
+	del _fprntsf.obj
+
+$(OBJ)\_fprntln.obj: src\_fprntxx.c \headers\stdio.h \headers\stdarg.h \
+		\headers\ctype.h 
+	cc -c -AM -Zl src\_fprntxx.c -Fo_fprntln
+	copy _fprntln.obj $(OBJ)
+	del _fprntln.obj
+
+$(OBJ)\_fprntlf.obj: src\_fprntxx.c \headers\stdio.h \headers\stdarg.h \
+		\headers\ctype.h 
+	cc -c -Alfu -Zl src\_fprntxx.c -Fo_fprntlf
+	copy _fprntlf.obj $(OBJ)
+	del _fprntlf.obj
+
+$(OBJ)\_fscansn.obj: src\_fscanxx.c \headers\stdio.h \headers\ctype.h \
+		\headers\stdarg.h 
+	cc -c -AS -Zl src\_fscanxx.c -Fo_fscansn
+	copy _fscansn.obj $(OBJ)
+	del _fscansn.obj
+
+$(OBJ)\_fscansf.obj: src\_fscanxx.c \headers\stdio.h \headers\ctype.h \
+		\headers\stdarg.h 
+	cc -c -AC -Zl src\_fscanxx.c -Fo_fscansf
+	copy _fscansf.obj $(OBJ)
+	del _fscansf.obj
+
+$(OBJ)\_fscanln.obj: src\_fscanxx.c \headers\stdio.h \headers\ctype.h \
+		\headers\stdarg.h 
+	cc -c -AM -Zl src\_fscanxx.c -Fo_fscanln
+	copy _fscanln.obj $(OBJ)
+	del _fscanln.obj
+
+$(OBJ)\_fscanlf.obj: src\_fscanxx.c \headers\stdio.h \headers\ctype.h \
+		\headers\stdarg.h 
+	cc -c -Alfu -Zl src\_fscanxx.c -Fo_fscanlf
+	copy _fscanlf.obj $(OBJ)
+	del _fscanlf.obj
+
+

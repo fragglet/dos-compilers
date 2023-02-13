@@ -1,0 +1,211 @@
+# makefile header for the formatted I/O libraries
+
+# 19jan87 zap  New library arangement: created this file.
+# 23feb87 zap  Compact model.
+# 12may87 zap  Separate headers and trailers, a la Noj.
+# 20oct87 zap  Add-ons when the base libs go too big to fit on the disks.
+
+#  -----------------------------------------------
+
+FLAGS= -c -AS -Zl
+AFLAGS= /I\c86plus\include /DCPU_0 /DMODEL_snd /mx
+OBJ= c86snd
+
+#FLAGS= -c -AM -Zl
+#AFLAGS= /I\c86plus\include /DCPU_0 /DMODEL_lnd /mx
+#OBJ= c86lnd
+
+#FLAGS= -c -AC -Zl
+#AFLAGS= /I\c86plus\include /DCPU_0 /DMODEL_sfd /mx
+#OBJ= c86sfd
+
+#FLAGS= -c -AL -Zl
+#AFLAGS= /I\c86plus\include /DCPU_0 /DMODEL_lfd /mx
+#OBJ= c86lfd
+
+SRC= src
+INCL= \c86plus\include
+
+#  -----------------------------------------------
+
+$(OBJ)\cabs.obj: $(SRC)\cabs.c $(INCL)\_math.h $(INCL)\float.h 
+	cc $(FLAGS) $(SRC)\cabs.c
+	copy cabs.obj $(OBJ)
+	del cabs.obj
+
+$(OBJ)\cgets.obj: $(SRC)\cgets.c $(INCL)\dos.h  
+	cc $(FLAGS) $(SRC)\cgets.c
+	copy cgets.obj $(OBJ)
+	del cgets.obj
+
+$(OBJ)\cprintf.obj: $(SRC)\cprintf.c $(INCL)\stdarg.h 
+	cc $(FLAGS) $(SRC)\cprintf.c
+	copy cprintf.obj $(OBJ)
+	del cprintf.obj
+
+$(OBJ)\cputs.obj: $(SRC)\cputs.c $(INCL)\dos.h  
+	cc $(FLAGS) $(SRC)\cputs.c
+	copy cputs.obj $(OBJ)
+	del cputs.obj
+
+$(OBJ)\fprintf.obj: $(SRC)\fprintf.c $(INCL)\stdio.h $(INCL)\stdarg.h 
+	cc $(FLAGS) $(SRC)\fprintf.c
+	copy fprintf.obj $(OBJ)
+	del fprintf.obj
+
+$(OBJ)\fscanf.obj: $(SRC)\fscanf.c $(INCL)\stdio.h $(INCL)\stdarg.h 
+	cc $(FLAGS) $(SRC)\fscanf.c
+	copy fscanf.obj $(OBJ)
+	del fscanf.obj
+
+$(OBJ)\getch.obj: $(SRC)\getch.c $(INCL)\dos.h  
+	cc $(FLAGS) $(SRC)\getch.c
+	copy getch.obj $(OBJ)
+	del getch.obj
+
+$(OBJ)\getche.obj: $(SRC)\getche.c $(INCL)\dos.h  
+	cc $(FLAGS) $(SRC)\getche.c
+	copy getche.obj $(OBJ)
+	del getche.obj
+
+$(OBJ)\hypot.obj: $(SRC)\hypot.c $(INCL)\_math.h $(INCL)\float.h  
+	cc $(FLAGS) $(SRC)\hypot.c
+	copy hypot.obj $(OBJ)
+	del hypot.obj
+
+$(OBJ)\inp.obj: $(SRC)\inp.c 
+	cc $(FLAGS) $(SRC)\inp.c
+	copy inp.obj $(OBJ)
+	del inp.obj
+
+$(OBJ)\int86.obj: $(SRC)\int86.c $(INCL)\dos.h  
+	cc $(FLAGS) $(SRC)\int86.c
+	copy int86.obj $(OBJ)
+	del int86.obj
+
+$(OBJ)\int86x.obj: $(SRC)\int86x.c $(INCL)\dos.h  
+	cc $(FLAGS) $(SRC)\int86x.c
+	copy int86x.obj $(OBJ)
+	del int86x.obj
+
+$(OBJ)\intdos.obj: $(SRC)\intdos.c $(INCL)\dos.h  
+	cc $(FLAGS) $(SRC)\intdos.c
+	copy intdos.obj $(OBJ)
+	del intdos.obj
+
+$(OBJ)\intdosx.obj: $(SRC)\intdosx.c $(INCL)\dos.h  
+	cc $(FLAGS) $(SRC)\intdosx.c
+	copy intdosx.obj $(OBJ)
+	del intdosx.obj
+
+$(OBJ)\movedata.obj: $(SRC)\movedata.c 
+	cc $(FLAGS) $(SRC)\movedata.c
+	copy movedata.obj $(OBJ)
+	del movedata.obj
+
+$(OBJ)\outp.obj: $(SRC)\outp.c 
+	cc $(FLAGS) $(SRC)\outp.c
+	copy outp.obj $(OBJ)
+	del outp.obj
+
+$(OBJ)\printf.obj: $(SRC)\printf.c $(INCL)\stdio.h $(INCL)\stdarg.h 
+	cc $(FLAGS) $(SRC)\printf.c
+	copy printf.obj $(OBJ)
+	del printf.obj
+
+$(OBJ)\putch.obj: $(SRC)\putch.c $(INCL)\dos.h  
+	cc $(FLAGS) $(SRC)\putch.c
+	copy putch.obj $(OBJ)
+	del putch.obj
+
+$(OBJ)\scanf.obj: $(SRC)\scanf.c $(INCL)\stdio.h $(INCL)\stdarg.h 
+	cc $(FLAGS) $(SRC)\scanf.c
+	copy scanf.obj $(OBJ)
+	del scanf.obj
+
+$(OBJ)\sprintf.obj: $(SRC)\sprintf.c $(INCL)\stdio.h $(INCL)\stdarg.h \
+		$(INCL)\fileio3.h 
+	cc $(FLAGS) $(SRC)\sprintf.c
+	copy sprintf.obj $(OBJ)
+	del sprintf.obj
+
+$(OBJ)\sscanf.obj: $(SRC)\sscanf.c $(INCL)\stdio.h $(INCL)\stdarg.h \
+		$(INCL)\fileio3.h 
+	cc $(FLAGS) $(SRC)\sscanf.c
+	copy sscanf.obj $(OBJ)
+	del sscanf.obj
+
+$(OBJ)\tell.obj: $(SRC)\tell.c 
+	cc $(FLAGS) $(SRC)\tell.c
+	copy tell.obj $(OBJ)
+	del tell.obj
+
+$(OBJ)\vfprintf.obj: $(SRC)\vfprintf.c $(INCL)\stdio.h $(INCL)\stdarg.h 
+	cc $(FLAGS) $(SRC)\vfprintf.c
+	copy vfprintf.obj $(OBJ)
+	del vfprintf.obj
+
+$(OBJ)\vprintf.obj: $(SRC)\vprintf.c $(INCL)\stdio.h $(INCL)\stdarg.h 
+	cc $(FLAGS) $(SRC)\vprintf.c
+	copy vprintf.obj $(OBJ)
+	del vprintf.obj
+
+$(OBJ)\vsprintf.obj: $(SRC)\vsprintf.c $(INCL)\stdio.h $(INCL)\stdarg.h \
+		$(INCL)\fileio3.h 
+	cc $(FLAGS) $(SRC)\vsprintf.c
+	copy vsprintf.obj $(OBJ)
+	del vsprintf.obj
+
+$(OBJ)\_doprnt.obj: $(SRC)\_doprnt.c $(INCL)\stdio.h $(INCL)\stdarg.h 
+	cc $(FLAGS) $(SRC)\_doprnt.c
+	copy _doprnt.obj $(OBJ)
+	del _doprnt.obj
+
+$(OBJ)\_doscan.obj: $(SRC)\_doscan.c $(INCL)\stdio.h $(INCL)\ctype.h \
+		$(INCL)\stdarg.h 
+	cc $(FLAGS) $(SRC)\_doscan.c
+	copy _doscan.obj $(OBJ)
+	del _doscan.obj
+
+$(OBJ)\swab.obj: $(SRC)\swab.asm $(INCL)\prologue.ah
+	masm $(AFLAGS) $(SRC)\swab;
+	copy swab.obj $(OBJ)
+	del swab.obj
+
+$(OBJ)\$main.obj: $(SRC)\$main.asm $(INCL)\prologue.ah
+ 	masm $(AFLAGS) /r $(SRC)\$main;
+ 	command /c dosseg $main.obj
+ 	copy $main.obj $(OBJ)
+ 	del $main.obj
+
+$(OBJ)\_fpc.obj: src\_fpc.asm \headers\prologue.ah
+ 	masm $(AFLAGS) /r src\_fpc;
+ 	copy _fpc.obj $(OBJ)
+ 	del _fpc.obj
+
+$(OBJ)\_ldiv.obj: $(SRC)\_ldiv.asm $(INCL)\prologue.ah
+	masm $(AFLAGS) $(SRC)\_ldiv;
+	copy _ldiv.obj $(OBJ)
+	del _ldiv.obj
+
+$(OBJ)\_lmul.obj: $(SRC)\_lmul.asm $(INCL)\prologue.ah
+	masm $(AFLAGS) $(SRC)\_lmul;
+	copy _lmul.obj $(OBJ)
+	del _lmul.obj
+
+$(OBJ)\_lrem.obj: $(SRC)\_lrem.asm $(INCL)\prologue.ah
+	masm $(AFLAGS) $(SRC)\_lrem;
+	copy _lrem.obj $(OBJ)
+	del _lrem.obj
+
+$(OBJ)\_lshl.obj: $(SRC)\_lshl.asm $(INCL)\prologue.ah
+	masm $(AFLAGS) $(SRC)\_lshl;
+	copy _lshl.obj $(OBJ)
+	del _lshl.obj
+
+$(OBJ)\_lshr.obj: $(SRC)\_lshr.asm $(INCL)\prologue.ah
+	masm $(AFLAGS) $(SRC)\_lshr;
+	copy _lshr.obj $(OBJ)
+	del _lshr.obj
+
+
